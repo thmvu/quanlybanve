@@ -32,6 +32,12 @@
                                 </x-slot>
 
                                 <x-slot name="content">
+                                    <x-dropdown-link :href="route('admin.orders.index')">
+                                        {{ __('Orders') }}
+                                    </x-dropdown-link>
+                                    <x-dropdown-link :href="route('admin.tickets.index')">
+                                        {{ __('Tickets') }}
+                                    </x-dropdown-link>
                                     <x-dropdown-link :href="route('admin.movies.index')">
                                         {{ __('Movies') }}
                                     </x-dropdown-link>
@@ -68,6 +74,10 @@
                         </x-slot>
 
                         <x-slot name="content">
+                            <x-dropdown-link :href="route('my-tickets')">
+                                {{ __('Vé Của Tôi') }}
+                            </x-dropdown-link>
+                            
                             <x-dropdown-link :href="route('profile.edit')">
                                 {{ __('Profile') }}
                             </x-dropdown-link>

@@ -68,6 +68,47 @@ class BookingController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Seat held for 10 minutes']);
     }
 
+    public function unlockSeat(Request $request, Showtime $showtime)
+    {
+        $request->validate([
+            'seat_id' => 'required|exists:seats,id'
+        ]);
+
+        $seatId = $request->seat_id;
+        $userId = auth()->id() ?? 'guest_' . session()->getId();
+        $lockKey = "seat_lock_{$showtime->id}_{$seatId}";
+
+        // Check if this user owns the lock
+        if (Cache::has($lockKey) && Cache::get($lockKey) === $userId) {
+            Cache::forget($lockKey);
+            return response()->json(['status' => 'success', 'message' => 'Seat unlocked']);
+        }
+
+        return response()->json(['status' => 'error', 'message' => 'Cannot unlock this seat'], 403);
+    }
+
+    public function payment(Request $request, Showtime $showtime)
+    {
+        $request->validate([
+            'seat_ids' => 'required|string'
+        ]);
+
+        $seatIds = $request->seat_ids;
+        $seatIdArray = explode(',', $seatIds);
+        
+        if(empty($seatIdArray)) {
+            return back()->with('error', 'Vui lòng chọn ít nhất một ghế');
+        }
+
+        // Load showtime with relationships
+        $showtime->load(['movie', 'room.cinema']);
+        
+        // Get seat details
+        $seats = Seat::whereIn('id', $seatIdArray)->get();
+
+        return view('booking.payment', compact('showtime', 'seats', 'seatIds'));
+    }
+
     public function checkout(Request $request, Showtime $showtime)
     {
         $userId = auth()->id() ?? 0; // Guest?
@@ -91,7 +132,7 @@ class BookingController extends Controller
             $order = Order::create([
                 'user_id' => auth()->id() ?? 1, // Fallback to user 1 if guest
                 'total_price' => $total,
-                'payment_method' => 'cash', // or vnpay
+                'payment_method' => $request->payment_method ?? 'cash',
                 'status' => 'paid', // Instant success for demo
                 'transaction_id' => 'TXN-' . strtoupper(uniqid()),
             ]);
@@ -120,6 +161,52 @@ class BookingController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Booking failed: ' . $e->getMessage());
+        }
+    }
+
+    public function myTickets()
+    {
+        $orders = Order::where('user_id', auth()->id())
+            ->with(['tickets.showtime.movie', 'tickets.showtime.room.cinema', 'tickets.seat'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('my-tickets', compact('orders'));
+    }
+
+    public function cancelOrder(Order $order)
+    {
+        // Check if order belongs to user
+        if ($order->user_id !== auth()->id()) {
+            return back()->with('error', 'Bạn không có quyền hủy đơn hàng này!');
+        }
+
+        // Check if within 5 minutes
+        $minutesSinceOrder = $order->created_at->diffInMinutes(now());
+        if ($minutesSinceOrder > 5) {
+            return back()->with('error', 'Đã quá thời gian hủy vé (5 phút sau khi đặt)!');
+        }
+
+        // Check if already cancelled
+        if ($order->status === 'cancelled') {
+            return back()->with('error', 'Đơn hàng đã được hủy trước đó!');
+        }
+
+        DB::beginTransaction();
+        try {
+            // Update order status
+            $order->update(['status' => 'cancelled']);
+
+            // Delete tickets and unlock seats
+            foreach ($order->tickets as $ticket) {
+                $ticket->delete();
+            }
+
+            DB::commit();
+            return back()->with('success', 'Đã hủy đơn hàng thành công!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
         }
     }
 }
