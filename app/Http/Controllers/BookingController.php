@@ -13,10 +13,20 @@ use Illuminate\Support\Facades\DB;
 
 class BookingController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         // Front page - List movies with showtimes
-        $movies = Movie::where('status', 'now_showing')->with(['showtimes' => function($q) {
+        $query = Movie::where('status', 'now_showing');
+
+        if ($request->has('search')) {
+            $search = $request->get('search');
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'like', '%' . $search . '%')
+                  ->orWhere('description', 'like', '%' . $search . '%');
+            });
+        }
+
+        $movies = $query->with(['showtimes' => function($q) {
             $q->where('start_time', '>', now())->orderBy('start_time');
         }])->get();
         return view('booking.index', compact('movies'));

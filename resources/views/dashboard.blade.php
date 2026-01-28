@@ -1,8 +1,10 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-bold text-2xl text-gray-800">
-            🎬 Cinema Dashboard
-        </h2>
+        <h1 class="font-bold text-2xl text-gray-800 
+           hover:text-blue-600 hover:scale-105 
+           transition-all duration-300 cursor-pointer">
+             Cinema Dashboard
+        </h1>
     </x-slot>
 
     <div class="py-10 bg-gray-100 min-h-screen">
@@ -55,29 +57,29 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
 
                 <div class="bg-white rounded-xl shadow p-6">
-                    <h3 class="text-lg font-semibold mb-4">📊 System Overview</h3>
+                    <h3 class="text-lg font-semibold mb-4"> Tổng quan hệ thống</h3>
 
                     <div class="space-y-3 text-gray-700">
 
                         <div class="flex justify-between">
-                            <span>Total Orders</span>
+                            <span>Tổng số đơn hàng</span>
                             <span class="font-bold">{{ $totalOrders }}</span>
                         </div>
 
                         <div class="flex justify-between">
-                            <span>Total Revenue</span>
+                            <span>Tổng doanh thu</span>
                             <span class="font-bold">
                                 {{ number_format($totalRevenue,0,',','.') }} đ
                             </span>
                         </div>
 
                         <div class="flex justify-between">
-                            <span>Total Movies</span>
+                            <span>Tổng số phim</span>
                             <span class="font-bold">{{ $totalMovies }}</span>
                         </div>
 
                         <div class="flex justify-between">
-                            <span>Total Cinemas</span>
+                            <span>Tổng số rạp</span>
                             <span class="font-bold">{{ $totalCinemas }}</span>
                         </div>
 
@@ -86,7 +88,7 @@
 
                 <!-- QUICK ACTION -->
                 <div class="bg-white rounded-xl shadow p-6">
-                    <h3 class="text-lg font-semibold mb-4">⚡ Quick Actions</h3>
+                    <h3 class="text-lg font-semibold mb-4"> Thao tác nhanh</h3>
 
                     <div class="grid grid-cols-2 gap-4">
 
@@ -122,11 +124,11 @@
             <div class="bg-white rounded-xl shadow p-6">
 
                 <h3 class="text-xl font-semibold mb-2">
-                    👋 Welcome, {{ auth()->user()->name }}
+                    Chào mừng trở lại, {{ auth()->user()->name }}
                 </h3>
 
                 <p class="text-gray-600 mb-6">
-                    Manage your bookings & tickets
+                    Quản lý đơn đặt vé và vé của bạn
                 </p>
 
                 @php
@@ -185,7 +187,7 @@
 
                     <a href="{{ route('booking.index') }}"
                        class="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold">
-                        🎬 Book Movie Now
+                         Book Movie Now
                     </a>
                 </div>
 

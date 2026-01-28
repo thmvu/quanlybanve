@@ -7,12 +7,19 @@ use Illuminate\Support\Facades\Storage;
 
 class MovieService
 {
-    public function getAllMovies($status = null)
+    public function getAllMovies($status = null, $search = null)
     {
         $query = Movie::query();
 
         if ($status) {
             $query->where('status', $status);
+        }
+
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'like', '%' . $search . '%')
+                  ->orWhere('description', 'like', '%' . $search . '%');
+            });
         }
 
         return $query->latest()->get();

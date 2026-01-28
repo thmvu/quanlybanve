@@ -37,6 +37,13 @@
 
 <section class="movie-section">
 
+    <div class="search-container">
+        <form action="{{ route('booking.index') }}" method="GET">
+            <input type="text" name="search" placeholder="Bạn muốn xem phim gì hôm nay?" value="{{ request('search') }}">
+            <button type="submit">TÌM KIẾM</button>
+        </form>
+    </div>
+
 <h2 class="section-title">MOVIE SELECTION</h2>
 
 <div class="movie-container">
@@ -85,7 +92,7 @@
     box-sizing: border-box;
 }
 
-/* ============ SLIDER ============ */
+
 
 .slider-wrapper {
     width: 100%;
@@ -169,7 +176,7 @@
 .prev { left: 20px; }
 .next { right: 20px; }
 
-/* ============ MOVIE SECTION ============ */
+
 
 .movie-section {
     padding: 60px 40px;
@@ -180,8 +187,49 @@
     text-align: center;
     font-size: 36px;
     font-weight: bold;
-    margin-bottom: 50px;
     color: #111;
+}
+
+/* SEARCH BOX */
+
+.search-container {
+    max-width: 600px;
+    margin: 0 auto 40px;
+    text-align: center;
+}
+
+.search-container form {
+    display: flex;
+    gap: 10px;
+}
+
+.search-container input {
+    flex: 1;
+    padding: 12px 20px;
+    border: 2px solid #ddd;
+    border-radius: 30px;
+    font-size: 16px;
+    outline: none;
+    transition: .3s;
+}
+
+.search-container input:focus {
+    border-color: #e50914;
+}
+
+.search-container button {
+    padding: 12px 30px;
+    background: #e50914;
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.search-container button:hover {
+    background: #c40812;
 }
 
 /* FLEX CONTAINER */

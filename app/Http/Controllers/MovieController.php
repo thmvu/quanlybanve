@@ -15,9 +15,9 @@ class MovieController extends Controller
         $this->movieService = $movieService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $movies = $this->movieService->getAllMovies();
+        $movies = $this->movieService->getAllMovies(null, $request->get('search'));
         return view('admin.movies.index', compact('movies'));
     }
 
@@ -34,6 +34,7 @@ class MovieController extends Controller
             'release_date' => 'required|date',
             'status' => 'required|in:coming_soon,now_showing,stop_showing',
             'poster' => 'nullable|image|max:2048',
+            'age_rating' => 'required|integer|min:0',
         ]);
 
         $this->movieService->createMovie($request->all());
@@ -54,6 +55,7 @@ class MovieController extends Controller
             'release_date' => 'required|date',
             'status' => 'required|in:coming_soon,now_showing,stop_showing',
             'poster' => 'nullable|image|max:2048',
+            'age_rating' => 'required|integer|min:0',
         ]);
 
         $this->movieService->updateMovie($movie, $request->all());

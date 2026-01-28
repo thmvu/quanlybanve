@@ -42,6 +42,16 @@
                         </div>
 
                         <div class="mb-4">
+                            <label for="age_rating" class="block text-gray-700 text-sm font-bold mb-2">Age Rating:</label>
+                            <select name="age_rating" id="age_rating" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                <option value="0">All Ages (P)</option>
+                                <option value="13">13+ (C13)</option>
+                                <option value="16">16+ (C16)</option>
+                                <option value="18">18+ (C18)</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
                             <label for="poster" class="block text-gray-700 text-sm font-bold mb-2">Poster:</label>
                             <input type="file" name="poster" id="poster" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" onchange="previewImage(event)">
                             <img id="poster-preview" class="mt-2 h-48 object-cover hidden rounded">

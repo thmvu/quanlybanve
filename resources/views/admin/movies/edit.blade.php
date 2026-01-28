@@ -43,6 +43,16 @@
                         </div>
 
                         <div class="mb-4">
+                            <label for="age_rating" class="block text-gray-700 text-sm font-bold mb-2">Age Rating:</label>
+                            <select name="age_rating" id="age_rating" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                <option value="0" {{ $movie->age_rating == 0 ? 'selected' : '' }}>All Ages (P)</option>
+                                <option value="13" {{ $movie->age_rating == 13 ? 'selected' : '' }}>13+ (C13)</option>
+                                <option value="16" {{ $movie->age_rating == 16 ? 'selected' : '' }}>16+ (C16)</option>
+                                <option value="18" {{ $movie->age_rating == 18 ? 'selected' : '' }}>18+ (C18)</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
                             <label for="poster" class="block text-gray-700 text-sm font-bold mb-2">Poster:</label>
                             @if($movie->poster)
                                 <div class="mb-2">
