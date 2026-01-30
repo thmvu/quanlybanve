@@ -140,8 +140,8 @@
                             <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-gray-100">Chưa có vé nào</h3>
                             <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Bắt đầu đặt vé để xem phim yêu thích!</p>
                             <div class="mt-6">
-                                <a href="{{ route('booking.index') }}" 
-                                   class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg transition">
+                                <a href="{{ route('home') }}" 
+                                   class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white font-bold rounded-full transition shadow-lg transform hover:scale-105">
                                     Đặt Vé Ngay
                                 </a>
                             </div>
