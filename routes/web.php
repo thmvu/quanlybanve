@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [\App\Http\Controllers\BookingController::class, 'index'])->name('home');
+Route::view('/offers', 'pages.offers')->name('offers');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

@@ -79,6 +79,11 @@
 
 </div>
 
+<!-- Pagination -->
+<div class="pagination-wrapper">
+    {{ $movies->links() }}
+</div>
+
 </section>
 
 
@@ -327,6 +332,14 @@
 
 @media(max-width: 480px) {
     .movie-card { width: 100%; }
+}
+
+/* PAGINATION */
+
+.pagination-wrapper {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
 }
 
 </style>

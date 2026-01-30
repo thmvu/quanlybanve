@@ -16,7 +16,14 @@ class BookingController extends Controller
     public function index(Request $request)
     {
         // Front page - List movies with showtimes
-        $query = Movie::where('status', 'now_showing');
+        $status = $request->get('status', 'now_showing');
+        
+        // Ensure status is valid
+        if (!in_array($status, ['now_showing', 'coming_soon'])) {
+            $status = 'now_showing';
+        }
+
+        $query = Movie::where('status', $status);
 
         if ($request->has('search')) {
             $search = $request->get('search');
@@ -28,7 +35,7 @@ class BookingController extends Controller
 
         $movies = $query->with(['showtimes' => function($q) {
             $q->where('start_time', '>', now())->orderBy('start_time');
-        }])->get();
+        }])->paginate(12)->appends($request->query());
         return view('booking.index', compact('movies'));
     }
 

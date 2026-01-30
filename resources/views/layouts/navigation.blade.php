@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="sticky top-0 z-50 bg-white/80 dark:bg-gray-800/90 backdrop-blur-md border-b border-gray-100 dark:border-gray-700 shadow-sm transition-all duration-300">
+<nav x-data="{ open: false }" class="sticky top-0 z-50 bg-gradient-to-r from-red-700 via-rose-600 to-pink-700 shadow-2xl transition-all duration-300" style="background: linear-gradient(90deg, #b91c1c 0%, #e11d48 50%, #be185d 100%);">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -6,21 +6,30 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}" class="transform hover:scale-110 transition-transform duration-300">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200 drop-shadow-md" />
+                        <x-application-logo class="block h-9 w-auto fill-current text-white drop-shadow-lg" />
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-4 sm:ms-10 sm:flex sm:items-center">
-                    <x-nav-link :href="route('home')" :active="request()->routeIs('home')">
-                        {{ __('Home') }}
+                <div class="hidden space-x-4 sm:ms-10 sm:flex sm:items-center ">
+                    <x-nav-link :href="route('home')" :active="request()->routeIs('home') && !request()->has('status')">
+                        {{ __('Phim Hot') }}
                     </x-nav-link>
-
+                    <x-nav-link :href="route('home', ['status' => 'now_showing'])" :active="request()->get('status') == 'now_showing'">
+                        {{ __('Phim Đang Chiếu') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('home', ['status' => 'coming_soon'])" :active="request()->get('status') == 'coming_soon'">
+                        {{ __('Phim Sắp Chiếu') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('offers')" :active="request()->routeIs('offers')">
+                        {{ __('Ưu Đãi') }}
+                    </x-nav-link>
+                    
                     @if(Auth::check() && Auth::user()->role === 'admin')
                         <div class="hidden sm:flex sm:items-center sm:ms-6">
                             <x-dropdown align="right" width="48">
                                 <x-slot name="trigger">
-                                    <button class="inline-flex items-center px-4 py-2 border border-transparent text-sm leading-4 font-medium rounded-full text-gray-500 dark:text-gray-400 bg-transparent hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150 hover:shadow-md">
+                                    <button class="inline-flex items-center px-4 py-2 border border-white/30 text-sm leading-4 font-medium rounded-full text-white bg-white/10 hover:bg-white/20 focus:outline-none transition ease-in-out duration-150 hover:shadow-md">
                                         <div>Admin Manage</div>
 
                                         <div class="ms-1">
@@ -62,7 +71,7 @@
                 @auth
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
-                            <button class="inline-flex items-center px-4 py-2 border border-transparent text-sm leading-4 font-medium rounded-full text-gray-500 dark:text-gray-400 bg-transparent hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150 hover:shadow-md">
+                            <button class="inline-flex items-center px-4 py-2 border border-white/30 text-sm leading-4 font-medium rounded-full text-white bg-white/10 hover:bg-white/20 focus:outline-none transition ease-in-out duration-150 hover:shadow-md">
                                 <div>{{ Auth::user()->name }}</div>
 
                                 <div class="ms-1">
@@ -95,10 +104,10 @@
                         </x-slot>
                     </x-dropdown>
                 @else
-                    <a href="{{ route('login') }}" class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 transition duration-150 ease-in-out">Log in</a>
+                    <a href="{{ route('login') }}" class="px-4 py-2 text-sm font-medium text-white hover:text-yellow-200 transition duration-150 ease-in-out">Log in</a>
                     
                     @if (Route::has('register'))
-                        <a href="{{ route('register') }}" class="ml-2 px-5 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 rounded-full shadow-lg shadow-indigo-500/30 transition duration-150 ease-in-out transform hover:-translate-y-0.5">Register</a>
+                        <a href="{{ route('register') }}" class="ml-2 px-5 py-2 text-sm font-medium text-red-600 bg-white hover:bg-yellow-100 rounded-full shadow-lg transition duration-150 ease-in-out transform hover:-translate-y-0.5">Register</a>
                     @endif
                 @endauth
             </div>
@@ -120,6 +129,18 @@
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('home')" :active="request()->routeIs('home') && !request()->has('status')">
+                {{ __('Phim Hot') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('home', ['status' => 'now_showing'])" :active="request()->get('status') == 'now_showing'">
+                {{ __('Phim Đang Chiếu') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('home', ['status' => 'coming_soon'])" :active="request()->get('status') == 'coming_soon'">
+                {{ __('Phim Sắp Chiếu') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('offers')" :active="request()->routeIs('offers')">
+                {{ __('Ưu Đãi') }}
             </x-responsive-nav-link>
         </div>
 
