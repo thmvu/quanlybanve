@@ -74,7 +74,7 @@
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <label class="payment-card relative flex flex-col items-center p-6 border-2 border-gray-200 rounded-xl cursor-pointer transition-all hover:bg-gray-50">
                                     <input type="radio" name="payment_method" value="cash" checked class="peer sr-only">
-                                    <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4 text-3xl">💵</div>
+                                    <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4 text-3xl"></div>
                                     <div class="font-bold text-lg">Tiền Mặt</div>
                                     <div class="text-sm text-gray-500 text-center mt-1">Thanh toán tại quầy</div>
                                     <div class="absolute inset-0 border-2 border-transparent peer-checked:border-red-500 rounded-xl pointer-events-none"></div>
