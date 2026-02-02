@@ -17,7 +17,7 @@ class MovieController extends Controller
 
     public function index(Request $request)
     {
-        $movies = $this->movieService->getAllMovies(null, $request->get('search'));
+        $movies = $this->movieService->getAllMovies(null, $request->get('search'), 4);
         return view('admin.movies.index', compact('movies'));
     }
 

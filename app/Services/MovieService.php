@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Storage;
 
 class MovieService
 {
-    public function getAllMovies($status = null, $search = null)
+    public function getAllMovies($status = null, $search = null, $perPage = null)
     {
         $query = Movie::query();
 
@@ -22,7 +22,9 @@ class MovieService
             });
         }
 
-        return $query->latest()->get();
+        $query = $query->latest();
+
+        return $perPage ? $query->paginate($perPage) : $query->get();
     }
 
     public function createMovie(array $data)

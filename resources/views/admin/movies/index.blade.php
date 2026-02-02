@@ -86,6 +86,8 @@
                                 @endforeach
                             </tbody>
                         </table>
+                    <div class="mt-4">
+                        {{ $movies->links() }}
                     </div>
                 </div>
             </div>

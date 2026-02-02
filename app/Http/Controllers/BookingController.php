@@ -13,6 +13,13 @@ use Illuminate\Support\Facades\DB;
 
 class BookingController extends Controller
 {
+    protected $movieService;
+
+    public function __construct(\App\Services\MovieService $movieService)
+    {
+        $this->movieService = $movieService;
+    }
+
     public function index(Request $request)
     {
         // Front page - List movies with showtimes
@@ -24,18 +31,7 @@ class BookingController extends Controller
         }
 
         $query = Movie::where('status', $status);
-
-        if ($request->has('search')) {
-            $search = $request->get('search');
-            $query->where(function($q) use ($search) {
-                $q->where('title', 'like', '%' . $search . '%')
-                  ->orWhere('description', 'like', '%' . $search . '%');
-            });
-        }
-
-        $movies = $query->with(['showtimes' => function($q) {
-            $q->where('start_time', '>', now())->orderBy('start_time');
-        }])->paginate(12)->appends($request->query());
+        $movies = $this->movieService->getAllMovies('now_showing', $request->get('search'), 4);
         return view('booking.index', compact('movies'));
     }
 

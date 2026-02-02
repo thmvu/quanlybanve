@@ -19,7 +19,7 @@ class ShowtimeController extends Controller
 
     public function index()
     {
-        $showtimes = Showtime::with(['movie', 'room.cinema'])->latest()->get();
+        $showtimes = Showtime::with(['movie', 'room.cinema'])->latest()->paginate(10);
         return view('admin.showtimes.index', compact('showtimes'));
     }
 

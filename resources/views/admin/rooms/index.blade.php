@@ -70,8 +70,10 @@
                 </div>
 
 
+                    <div class="mt-4">
+                        {{ $rooms->links() }}
+                    </div>
                 </div>
             </div>
-        </div>
     </div>
 </x-app-layout>
