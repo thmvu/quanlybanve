@@ -1,85 +1,67 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+        <h2 class="font-semibold text-xl text-white leading-tight">
             {{ __('Chọn Ghế Ngồi') }}
         </h2>
-        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
-            <strong>{{ $showtime->movie->title }}</strong>
-            - {{ $showtime->room->cinema->name }}
-            - {{ $showtime->room->name }}
-            - {{ $showtime->start_time->format('H:i, d/m/Y') }}
-        </p>
     </x-slot>
 
-    <div class="py-10 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-900 dark:to-black">
-        <div class="max-w-6xl mx-auto px-4">
+    <div class="seats-page">
+        <div class="seats-container">
 
             @if(session('error'))
-                <div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-xl shadow">
+                <div class="alert-error">
                     {{ session('error') }}
                 </div>
             @endif
 
-            <div class="bg-white dark:bg-gray-900 shadow-2xl rounded-2xl p-8">
+            <div class="seats-card">
+
+                <!-- Movie Info Header -->
+                <div class="movie-header">
+                    <h2>{{ $showtime->movie->title }}</h2>
+                    <p class="movie-meta">
+                        {{ $showtime->room->cinema->name }} • {{ $showtime->room->name }} • 
+                        {{ $showtime->start_time->format('H:i, d/m/Y') }}
+                    </p>
+                </div>
 
                 <!-- SCREEN -->
-                <div class="mb-12 text-center">
-                    <div class="relative mx-auto max-w-2xl">
-                        <!-- Screen Visual -->
-                        <div class="h-12 border-t-4 border-red-500 rounded-[50%] shadow-[0_-10px_20px_rgba(239,68,68,0.3)] w-full"></div>
-                        <p class="mt-4 tracking-[0.3em] font-bold text-gray-400 text-sm uppercase">
-                            Màn Hình
-                        </p>
-                    </div>
+                <div class="screen-section">
+                    <div class="screen-bar"></div>
+                    <p class="screen-label">MÀN HÌNH</p>
                 </div>
 
                 <!-- LEGEND -->
-                <div class="inline-flex justify-center gap-6 md:gap-12 flex-wrap mb-10 bg-white shadow-sm p-4 rounded-full border border-gray-200 mx-auto">
-
-                    <div class="flex items-center gap-3">
-                        <div class="w-6 h-6 border-2 border-gray-400 rounded bg-white"></div>
-                        <span class="text-sm font-bold text-gray-600">Trống</span>
+                <div class="legend-box">
+                    <div class="legend-item">
+                        <div class="seat-demo available"></div>
+                        <span>Trống</span>
                     </div>
-
-                    <div class="flex items-center gap-3">
-                        <div class="w-6 h-6 bg-red-600 rounded border border-red-700 shadow-sm"></div>
-                        <span class="text-sm font-bold text-gray-600">Đang chọn</span>
+                    <div class="legend-item">
+                        <div class="seat-demo selected"></div>
+                        <span>Đang chọn</span>
                     </div>
-
-                    <div class="flex items-center gap-3">
-                        <div class="w-6 h-6 bg-gray-300 rounded cursor-not-allowed"></div>
-                        <span class="text-sm font-bold text-gray-600">Đã đặt</span>
+                    <div class="legend-item">
+                        <div class="seat-demo booked"></div>
+                        <span>Đã đặt</span>
                     </div>
-
                 </div>
 
-                <!-- SEATS -->
-                <div class="flex flex-col items-center gap-4 mb-10 overflow-x-auto pb-4">
-
+                <!-- SEATS GRID -->
+                <div class="seats-grid">
                     @php
                         $rows = $showtime->room->seats->groupBy('row');
                     @endphp
 
                     @foreach($rows as $row => $seats)
+                        <div class="seat-row">
+                            <div class="row-label">{{ $row }}</div>
 
-                        <div class="flex items-center gap-4 flex-nowrap">
-
-                            <!-- ROW LABEL -->
-                            <div class="w-8 text-xl font-black text-gray-300">
-                                {{ $row }}
-                            </div>
-
-                            <!-- SEATS -->
-                            <div class="flex gap-2 md:gap-3">
-
+                            <div class="seat-list">
                                 @foreach($seats as $seat)
-
                                     @php
                                         $isBooked = in_array($seat->id, $bookedSeatIds);
-
-                                        $seatClass = $isBooked
-                                            ? 'bg-gray-200 text-transparent cursor-not-allowed border border-gray-200'
-                                            : 'bg-white border-2 border-gray-300 text-gray-700 hover:border-red-500 hover:text-red-600 hover:shadow-md cursor-pointer';
+                                        $seatClass = $isBooked ? 'seat-btn booked' : 'seat-btn';
                                     @endphp
 
                                     <button
@@ -89,64 +71,287 @@
                                         data-number="{{ $seat->number }}"
                                         onclick="toggleSeat(this)"
                                         {{ $isBooked ? 'disabled' : '' }}
-                                        class="seat-btn w-8 h-8 md:w-10 md:h-10 rounded-lg text-sm md:text-base font-bold transition-all duration-200 {{ $seatClass }}"
-                                    >
+                                        class="{{ $seatClass }}">
                                         {{ $seat->number }}
                                     </button>
-
                                 @endforeach
-
                             </div>
                         </div>
-
                     @endforeach
-
                 </div>
 
-                <!-- SUMMARY -->
-                <div class="border-t border-gray-100 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
-
-                    <div>
-                        <p class="text-gray-500 font-medium mb-1">Ghế đã chọn:</p>
-                        <p id="selected-seats-display" class="text-2xl font-bold text-red-600 min-h-[2rem]">
-                            Chưa chọn ghế
-                        </p>
-
-                        <p class="mt-2 text-lg">
-                            Tổng tiền:
-                            <span id="total-price" class="font-bold text-gray-900">0</span> <span class="text-sm text-gray-500">VND</span>
+                <!-- SUMMARY & CHECKOUT -->
+                <div class="checkout-section">
+                    <div class="summary-box">
+                        <p class="summary-label">Ghế đã chọn:</p>
+                        <p id="selected-seats-display" class="summary-seats">Chưa chọn ghế</p>
+                        <p class="summary-price">
+                            Tổng tiền: <span id="total-price">0</span> VND
                         </p>
                     </div>
 
-                    <!-- PAY -->
                     <form action="{{ route('booking.payment', $showtime) }}" method="POST">
                         @csrf
                         <input type="hidden" name="seat_ids" id="seat-ids-input">
-
-                        <button onclick="return prepareCheckout()"
-                            class="bg-red-600 hover:bg-red-700
-                                text-white font-bold
-                                px-10 py-4 rounded-xl
-                                shadow-lg shadow-red-500/30
-                                hover:shadow-red-500/50
-                                transform hover:-translate-y-1
-                                transition-all duration-200
-                                flex items-center gap-2">
-                            <span>THANH TOÁN</span>
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        <button onclick="return prepareCheckout()" class="btn-checkout">
+                            THANH TOÁN →
                         </button>
-
-
                     </form>
-
                 </div>
 
             </div>
         </div>
     </div>
 
-<script>
+<style>
+.seats-page {
+    padding: 40px 20px;
+    background: #f5f7fa;
+    min-height: 100vh;
+}
 
+.seats-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.seats-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    padding: 40px;
+}
+
+.alert-error {
+    background: #fee;
+    border: 1px solid #fcc;
+    color: #c00;
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+/* Movie Header */
+.movie-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.movie-header h2 {
+    font-size: 32px;
+    font-weight: bold;
+    color: #e50914;
+    margin-bottom: 8px;
+}
+
+.movie-meta {
+    color: #666;
+    font-size: 15px;
+}
+
+/* Screen */
+.screen-section {
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.screen-bar {
+    width: 70%;
+    height: 12px;
+    background: linear-gradient(to bottom, #e50914, #ff6b6b);
+    margin: 0 auto 12px;
+    border-radius: 0 0 50% 50%;
+    box-shadow: 0 8px 20px rgba(229, 9, 20, 0.3);
+}
+
+.screen-label {
+    font-size: 12px;
+    font-weight: bold;
+    color: #999;
+    letter-spacing: 3px;
+}
+
+/* Legend */
+.legend-box {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.legend-item span {
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+}
+
+.seat-demo {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+}
+
+.seat-demo.available {
+    background: #fff;
+    border: 2px solid #ddd;
+}
+
+.seat-demo.selected {
+    background: #e50914;
+    border: 2px solid #c40812;
+}
+
+.seat-demo.booked {
+    background: #ccc;
+    border: 2px solid #aaa;
+}
+
+/* Seats Grid */
+.seats-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 40px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+}
+
+.seat-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.row-label {
+    width: 30px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: #aaa;
+}
+
+.seat-list {
+    display: flex;
+    gap: 8px;
+}
+
+.seat-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    border: 2px solid #ddd;
+    background: #fff;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #333;
+}
+
+.seat-btn:hover:not(.booked):not(.selected) {
+    border-color: #e50914;
+    background: #fff5f5;
+    transform: scale(1.1);
+}
+
+.seat-btn.selected {
+    background: #e50914;
+    border-color: #c40812;
+    color: #fff;
+    transform: scale(1.1);
+}
+
+.seat-btn.booked {
+    background: #e0e0e0;
+    border-color: #bbb;
+    color: transparent;
+    cursor: not-allowed;
+}
+
+/* Checkout Section */
+.checkout-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 30px;
+    border-top: 2px solid #f0f0f0;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.summary-box {
+    flex: 1;
+}
+
+.summary-label {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 6px;
+}
+
+.summary-seats {
+    font-size: 24px;
+    font-weight: bold;
+    color: #e50914;
+    margin-bottom: 10px;
+}
+
+.summary-price {
+    font-size: 16px;
+    color: #333;
+}
+
+.summary-price span {
+    font-weight: bold;
+    color: #000;
+}
+
+.btn-checkout {
+    background: #e50914;
+    color: #fff;
+    padding: 16px 48px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 12px rgba(229, 9, 20, 0.3);
+}
+
+.btn-checkout:hover {
+    background: #c40812;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(229, 9, 20, 0.4);
+}
+
+@media (max-width: 768px) {
+    .seats-card {
+        padding: 20px;
+    }
+    
+    .checkout-section {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .btn-checkout {
+        width: 100%;
+    }
+}
+</style>
+
+<script>
 const showtimeId = {{ $showtime->id }};
 const selectedSeats = new Set();
 const selectedSeatIds = new Set();
@@ -155,25 +360,19 @@ const pricePerSeat = 100000;
 const maxSeats = 4;
 
 function prepareCheckout() {
-
     if (selectedSeatIds.size === 0) {
         alert("Bạn chưa chọn ghế!");
         return false;
     }
-
-    document.getElementById('seat-ids-input').value =
-        Array.from(selectedSeatIds).join(',');
-
+    document.getElementById('seat-ids-input').value = Array.from(selectedSeatIds).join(',');
     return true;
 }
 
 function toggleSeat(el) {
-
     const seatId = el.dataset.id;
     const label = el.dataset.row + el.dataset.number;
 
-    // Check if selected (class bg-red-600)
-    if (el.classList.contains('bg-red-600')) {
+    if (el.classList.contains('selected')) {
         unlockSeat(el, seatId, label);
     } else {
         if (selectedSeatIds.size >= maxSeats) {
@@ -185,7 +384,6 @@ function toggleSeat(el) {
 }
 
 function lockSeat(el, id, label) {
-
     fetch(`/booking/${showtimeId}/lock`, {
         method: "POST",
         headers: {
@@ -194,29 +392,20 @@ function lockSeat(el, id, label) {
         },
         body: JSON.stringify({ seat_id: id })
     })
-
     .then(res => res.json())
     .then(data => {
-
         if (data.status === "success") {
-
-            // Apply SELECTED style
-            el.className =
-                "seat-btn w-8 h-8 md:w-10 md:h-10 rounded-lg text-sm md:text-base font-bold transition-all duration-200 bg-red-600 text-white border-2 border-red-600 shadow-lg scale-110";
-
+            el.classList.add('selected');
             selectedSeats.add(label);
             selectedSeatIds.add(id);
             updateDisplay();
-
         } else {
             alert("Ghế đã có người chọn!");
         }
-
     });
 }
 
 function unlockSeat(el, id, label) {
-
     fetch(`/booking/${showtimeId}/unlock`, {
         method: "POST",
         headers: {
@@ -225,13 +414,8 @@ function unlockSeat(el, id, label) {
         },
         body: JSON.stringify({ seat_id: id })
     })
-
     .then(() => {
-
-        // Apply UNSELECTED (available) style
-        el.className =
-            "seat-btn w-8 h-8 md:w-10 md:h-10 rounded-lg text-sm md:text-base font-bold transition-all duration-200 bg-white border-2 border-gray-300 text-gray-700 hover:border-red-500 hover:text-red-600 hover:shadow-md cursor-pointer";
-
+        el.classList.remove('selected');
         selectedSeats.delete(label);
         selectedSeatIds.delete(id);
         updateDisplay();
@@ -239,22 +423,16 @@ function unlockSeat(el, id, label) {
 }
 
 function updateDisplay() {
-
     const seatBox = document.getElementById("selected-seats-display");
     const priceBox = document.getElementById("total-price");
 
     if (selectedSeats.size > 0) {
-
         seatBox.innerText = [...selectedSeats].join(", ");
-        priceBox.innerText =
-            (selectedSeats.size * pricePerSeat).toLocaleString("vi-VN");
-
+        priceBox.innerText = (selectedSeats.size * pricePerSeat).toLocaleString("vi-VN");
     } else {
-
         seatBox.innerText = "Chưa chọn ghế";
         priceBox.innerText = "0";
     }
 }
-
 </script>
 </x-app-layout>
