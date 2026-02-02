@@ -6,120 +6,146 @@
     </x-slot>
 
     <div class="py-12 bg-gray-50 dark:bg-gray-900 min-h-screen">
-        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-2xl sm:rounded-2xl border-t-4 border-red-600">
                 <div class="p-8">
-                    <h3 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-8 border-b pb-4">Thông Tin Đặt Vé</h3>
+                    
+                    <h3 class="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-8 pb-4 border-b border-gray-200">
+                        Thông Tin Đặt Vé
+                    </h3>
 
-                    <!-- Movie & Showtime Info -->
-                    <div class="mb-8 p-6 bg-gray-50 dark:bg-gray-700 rounded-xl shadow-inner">
-                        <div class="flex gap-8 flex-col md:flex-row">
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+                        
+                        <!-- Movie Info (Left Column) -->
+                        <div class="md:col-span-4 space-y-6">
                             @if($showtime->movie->poster)
                                 <img src="{{ Storage::url($showtime->movie->poster) }}" 
-                                     class="w-40 h-60 object-cover rounded-lg shadow-md mx-auto md:mx-0"
+                                     class="w-full h-auto object-cover rounded-xl shadow-lg border-2 border-white transform hover:scale-105 transition-transform duration-300"
                                      alt="{{ $showtime->movie->title }}">
                             @endif
-                            <div class="flex-1">
-                                <h4 class="text-3xl font-bold text-red-600 dark:text-red-400 mb-4 uppercase">
+                            
+                            <div>
+                                <h4 class="text-2xl font-black text-red-600 dark:text-red-500 mb-2 uppercase leading-tight">
                                     {{ $showtime->movie->title }}
                                 </h4>
-                                <div class="space-y-3 text-lg text-gray-700 dark:text-gray-300">
-                                    <p><strong class="w-32 inline-block text-gray-500">Rạp:</strong> {{ $showtime->room->cinema->name }}</p>
-                                    <p><strong class="w-32 inline-block text-gray-500">Phòng:</strong> {{ $showtime->room->name }}</p>
-                                    <p><strong class="w-32 inline-block text-gray-500">Suất chiếu:</strong> {{ $showtime->start_time->format('H:i') }} - <span class="text-indigo-600 font-bold">{{ $showtime->start_time->format('d/m/Y') }}</span></p>
-                                    <p><strong class="w-32 inline-block text-gray-500">Thời lượng:</strong> {{ $showtime->movie->duration }} phút</p>
+                                <div class="text-sm text-gray-500 dark:text-gray-400 font-medium mb-4">
+                                    {{ $showtime->movie->duration }} phút
+                                </div>
+                                
+                                <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-xl border border-gray-100 dark:border-gray-600 text-sm space-y-3">
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-500">Rạp</span>
+                                        <span class="font-bold text-gray-800 dark:text-gray-200">{{ $showtime->room->cinema->name }}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-500">Phòng</span>
+                                        <span class="font-bold text-gray-800 dark:text-gray-200">{{ $showtime->room->name }}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-500">Xuất chiếu</span>
+                                        <span class="font-bold text-red-600">{{ $showtime->start_time->format('H:i') }}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-500">Ngày</span>
+                                        <span class="font-bold text-gray-800 dark:text-gray-200">{{ $showtime->start_time->format('d/m/Y') }}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Booking Details & Payment (Right Column) -->
+                        <div class="md:col-span-8">
+                            <form method="POST" action="{{ route('booking.checkout', $showtime) }}">
+                                @csrf
+                                <input type="hidden" name="seat_ids" value="{{ $seatIds }}">
+
+                                <!-- Selected Seats -->
+                                <div class="mb-8 p-6 bg-gradient-to-br from-red-50 to-white rounded-xl border border-red-100 shadow-sm">
+                                    <h4 class="text-sm uppercase tracking-wide text-gray-500 font-bold mb-3">Ghế đã chọn</h4>
+                                    <div class="flex flex-wrap gap-2 mb-4">
+                                        @foreach($seats as $seat)
+                                            <span class="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg font-bold shadow-md text-sm">
+                                                {{ $seat->row }}{{ $seat->number }}
+                                            </span>
+                                        @endforeach
+                                    </div>
+                                    
+                                    <div class="flex justify-between items-end pt-4 border-t border-red-100">
+                                        <span class="text-gray-600 font-medium">Tổng cộng</span>
+                                        <span class="text-3xl font-black text-red-600">
+                                            {{ number_format(count($seats) * 100000, 0, ',', '.') }} đ
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- Payment Method -->
+                                <div class="mb-10">
+                                    <h4 class="text-sm uppercase tracking-wide text-gray-500 font-bold mb-3">Phương thức thanh toán</h4>
+                                    
+                                    <div class="flex flex-col gap-3">
+                                        
+                                        <!-- Cash -->
+                                        <label class="relative flex items-center p-4 bg-white border-2 border-gray-200 rounded-xl cursor-pointer hover:border-red-400 hover:bg-red-50 transition-all group">
+                                            <div class="flex items-center h-5">
+                                                <input type="radio" name="payment_method" value="cash" checked class="w-5 h-5 text-red-600 border-gray-300 focus:ring-red-500">
+                                            </div>
+                                            <div class="ml-4 flex items-center flex-1">
+                                                <span class="text-2xl mr-3">💵</span>
+                                                <div class="flex flex-col">
+                                                    <span class="block text-sm font-bold text-gray-900 group-hover:text-red-700">Tiền Mặt</span>
+                                                    <span class="block text-xs text-gray-500">Thanh toán tại quầy</span>
+                                                </div>
+                                            </div>
+                                        </label>
+
+                                        <!-- VNPay -->
+                                        <label class="relative flex items-center p-4 bg-white border-2 border-gray-200 rounded-xl cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-all group">
+                                            <div class="flex items-center h-5">
+                                                <input type="radio" name="payment_method" value="vnpay" class="w-5 h-5 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                            </div>
+                                            <div class="ml-4 flex items-center flex-1">
+                                                <span class="text-2xl mr-3 font-bold text-blue-600">VNP</span>
+                                                <div class="flex flex-col">
+                                                    <span class="block text-sm font-bold text-gray-900 group-hover:text-blue-700">VNPay</span>
+                                                    <span class="block text-xs text-gray-500">Quét mã QR</span>
+                                                </div>
+                                            </div>
+                                        </label>
+
+                                        <!-- MoMo -->
+                                        <label class="relative flex items-center p-4 bg-white border-2 border-gray-200 rounded-xl cursor-pointer hover:border-pink-400 hover:bg-pink-50 transition-all group">
+                                            <div class="flex items-center h-5">
+                                                <input type="radio" name="payment_method" value="momo" class="w-5 h-5 text-pink-600 border-gray-300 focus:ring-pink-500">
+                                            </div>
+                                            <div class="ml-4 flex items-center flex-1">
+                                                <span class="text-2xl mr-3 font-bold text-pink-600">Mo</span>
+                                                <div class="flex flex-col">
+                                                    <span class="block text-sm font-bold text-gray-900 group-hover:text-pink-700">MoMo</span>
+                                                    <span class="block text-xs text-gray-500">Ví điện tử</span>
+                                                </div>
+                                            </div>
+                                        </label>
+
+                                    </div>
+                                </div>
+
+                                <!-- Buttons -->
+                                <div class="flex gap-4 pt-6 border-t border-gray-100">
+                                    <a href="{{ route('booking.show', $showtime) }}" 
+                                       class="px-6 py-4 rounded-xl font-bold text-gray-600 hover:text-red-600 hover:bg-red-50 transition-colors border border-transparent hover:border-red-200">
+                                        ← Quay lại
+                                    </a>
+                                    
+                                    <button type="submit" 
+                                            class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-8 rounded-xl shadow-lg shadow-red-500/30 transform hover:-translate-y-1 transition-all duration-200 text-lg uppercase tracking-wide">
+                                        Xác Nhận Thanh Toán
+                                    </button>
+                                </div>
+
+                            </form>
+                        </div>
                     </div>
 
-                    <!-- Selected Seats -->
-                    <div class="mb-8">
-                        <h4 class="font-bold text-xl text-gray-900 dark:text-gray-100 mb-4">Ghế Đã Chọn</h4>
-                        <div class="flex flex-wrap gap-3">
-                            @foreach($seats as $seat)
-                                <span class="px-5 py-3 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-xl font-bold font-mono text-lg shadow-lg transform hover:scale-105 transition-transform cursor-default">
-                                    {{ $seat->row }}{{ $seat->number }}
-                                </span>
-                            @endforeach
-                        </div>
-                    </div>
-
-                    <!-- Price Summary -->
-                    <div class="mb-8 p-6 bg-red-50 dark:bg-gray-700 rounded-xl border border-red-100 dark:border-gray-600">
-                        <h4 class="font-bold text-xl text-red-800 dark:text-red-400 mb-4">Chi Tiết Giá</h4>
-                        @php
-                            $pricePerSeat = 100000;
-                            $totalPrice = count($seats) * $pricePerSeat;
-                        @endphp
-                        <div class="space-y-3">
-                            <div class="flex justify-between text-gray-700 dark:text-gray-300 text-lg">
-                                <span>Giá vé ({{ count($seats) }} x {{ number_format($pricePerSeat, 0, ',', '.') }} VND)</span>
-                                <span>{{ number_format($totalPrice, 0, ',', '.') }} VND</span>
-                            </div>
-                            <div class="flex justify-between text-2xl font-bold text-gray-900 dark:text-gray-100 pt-4 border-t border-red-200 dark:border-gray-600 mt-2">
-                                <span>Tổng Cộng</span>
-                                <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-pink-600">{{ number_format($totalPrice, 0, ',', '.') }} VND</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Payment Method -->
-                    <form method="POST" action="{{ route('booking.checkout', $showtime) }}">
-                        @csrf
-                        <input type="hidden" name="seat_ids" value="{{ $seatIds }}">
-
-                        <div class="mb-8">
-                            <h4 class="font-bold text-xl text-gray-900 dark:text-gray-100 mb-4">Phương Thức Thanh Toán</h4>
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <label class="payment-card relative flex flex-col items-center p-6 border-2 border-gray-200 rounded-xl cursor-pointer transition-all hover:border-red-300 hover:shadow-md bg-white hover:bg-red-50">
-                                    <input type="radio" name="payment_method" value="cash" checked class="peer sr-only">
-                                    <div class="w-16 h-16 bg-gradient-to-br from-green-100 to-green-200 text-green-600 rounded-full flex items-center justify-center mb-4 text-3xl shadow-inner">💵</div>
-                                    <div class="font-bold text-lg text-gray-800">Tiền Mặt</div>
-                                    <div class="text-sm text-gray-500 text-center mt-1">Thanh toán tại quầy</div>
-                                    <div class="absolute inset-0 border-2 border-transparent peer-checked:border-red-500 peer-checked:bg-red-50/30 rounded-xl pointer-events-none transition-all"></div>
-                                    <div class="absolute top-3 right-3 hidden peer-checked:block text-white bg-red-500 rounded-full p-1 shadow-lg transform scale-100 transition-transform">
-                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
-                                    </div>
-                                </label>
-                                
-                                <label class="payment-card relative flex flex-col items-center p-6 border-2 border-gray-200 rounded-xl cursor-pointer transition-all hover:border-blue-300 hover:shadow-md bg-white hover:bg-blue-50">
-                                    <input type="radio" name="payment_method" value="vnpay" class="peer sr-only">
-                                    <div class="w-16 h-16 bg-gradient-to-br from-blue-100 to-blue-200 text-blue-600 rounded-full flex items-center justify-center mb-4 text-2xl font-bold shadow-inner">VNP</div>
-                                    <div class="font-bold text-lg text-gray-800">VNPay</div>
-                                    <div class="text-sm text-gray-500 text-center mt-1">Quét mã QR</div>
-                                    <div class="absolute inset-0 border-2 border-transparent peer-checked:border-blue-500 peer-checked:bg-blue-50/30 rounded-xl pointer-events-none transition-all"></div>
-                                    <div class="absolute top-3 right-3 hidden peer-checked:block text-white bg-blue-500 rounded-full p-1 shadow-lg transform scale-100 transition-transform">
-                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
-                                    </div>
-                                </label>
-
-                                <label class="payment-card relative flex flex-col items-center p-6 border-2 border-gray-200 rounded-xl cursor-pointer transition-all hover:border-pink-300 hover:shadow-md bg-white hover:bg-pink-50">
-                                    <input type="radio" name="payment_method" value="momo" class="peer sr-only">
-                                    <div class="w-16 h-16 bg-gradient-to-br from-pink-100 to-pink-200 text-pink-600 rounded-full flex items-center justify-center mb-4 text-2xl font-bold shadow-inner">MoMo</div>
-                                    <div class="font-bold text-lg text-gray-800">MoMo</div>
-                                    <div class="text-sm text-gray-500 text-center mt-1">Ví điện tử</div>
-                                    <div class="absolute inset-0 border-2 border-transparent peer-checked:border-pink-500 peer-checked:bg-pink-50/30 rounded-xl pointer-events-none transition-all"></div>
-                                    <div class="absolute top-3 right-3 hidden peer-checked:block text-white bg-pink-500 rounded-full p-1 shadow-lg transform scale-100 transition-transform">
-                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
-                                    </div>
-                                </label>
-                            </div>
-                        </div>
-
-                        <!-- Action Buttons -->
-                        <div class="flex gap-6 mt-10">
-                            <a href="{{ route('booking.show', $showtime) }}" 
-                               class="flex-1 text-center border-2 border-gray-300 hover:border-red-500 text-gray-600 hover:text-red-500 font-bold py-4 px-6 rounded-xl transition text-lg flex items-center justify-center gap-2 group bg-white hover:bg-red-50">
-                                <span class="group-hover:-translate-x-1 transition-transform">←</span> Quay Lại
-                            </a>
-                            <button type="submit" 
-                                    class="flex-[2] bg-gradient-to-r from-red-600 via-pink-600 to-red-600 bg-size-200 hover:bg-right text-white font-bold py-4 px-6 rounded-xl transition-all duration-500 shadow-lg hover:shadow-red-500/50 hover:scale-[1.02] text-lg uppercase tracking-wider flex items-center justify-center gap-2">
-                                <span>Xác Nhận Thanh Toán</span>
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                            </button>
-                        </div>
-                    </form>
                 </div>
             </div>
         </div>

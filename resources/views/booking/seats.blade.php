@@ -24,36 +24,37 @@
 
                 <!-- SCREEN -->
                 <div class="mb-12 text-center">
-                    <div class="relative mx-auto max-w-xl">
-                        <div class="h-3 bg-gradient-to-r from-red-400 via-pink-500 to-red-400 rounded-full shadow-[0_0_15px_rgba(236,72,153,0.5)]"></div>
-                        <p class="mt-4 tracking-[0.2em] font-bold text-gray-400 dark:text-gray-500 text-sm">
-                            MÀN HÌNH
+                    <div class="relative mx-auto max-w-2xl">
+                        <!-- Screen Visual -->
+                        <div class="h-12 border-t-4 border-red-500 rounded-[50%] shadow-[0_-10px_20px_rgba(239,68,68,0.3)] w-full"></div>
+                        <p class="mt-4 tracking-[0.3em] font-bold text-gray-400 text-sm uppercase">
+                            Màn Hình
                         </p>
                     </div>
                 </div>
 
                 <!-- LEGEND -->
-                <div class="flex justify-center gap-8 flex-wrap mb-10 bg-gray-50 dark:bg-gray-800 p-4 rounded-xl border border-gray-100">
+                <div class="inline-flex justify-center gap-6 md:gap-12 flex-wrap mb-10 bg-white shadow-sm p-4 rounded-full border border-gray-200 mx-auto">
 
-                    <div class="flex items-center gap-2">
-                        <div class="w-8 h-8 bg-white border-2 border-gray-300 rounded-lg"></div>
-                        <span class="text-sm font-medium text-gray-600">Còn trống</span>
+                    <div class="flex items-center gap-3">
+                        <div class="w-6 h-6 border-2 border-gray-400 rounded bg-white"></div>
+                        <span class="text-sm font-bold text-gray-600">Trống</span>
                     </div>
 
-                    <div class="flex items-center gap-2">
-                        <div class="w-8 h-8 bg-green-500 rounded-lg shadow-md shadow-green-200"></div>
-                        <span class="text-sm font-medium text-gray-600">Đang chọn</span>
+                    <div class="flex items-center gap-3">
+                        <div class="w-6 h-6 bg-red-600 rounded border border-red-700 shadow-sm"></div>
+                        <span class="text-sm font-bold text-gray-600">Đang chọn</span>
                     </div>
 
-                    <div class="flex items-center gap-2">
-                        <div class="w-8 h-8 bg-gray-400 rounded-lg"></div>
-                        <span class="text-sm font-medium text-gray-600">Đã đặt</span>
+                    <div class="flex items-center gap-3">
+                        <div class="w-6 h-6 bg-gray-300 rounded cursor-not-allowed"></div>
+                        <span class="text-sm font-bold text-gray-600">Đã đặt</span>
                     </div>
 
                 </div>
 
                 <!-- SEATS -->
-                <div class="flex flex-col items-center gap-4 mb-10">
+                <div class="flex flex-col items-center gap-4 mb-10 overflow-x-auto pb-4">
 
                     @php
                         $rows = $showtime->room->seats->groupBy('row');
@@ -61,15 +62,15 @@
 
                     @foreach($rows as $row => $seats)
 
-                        <div class="flex items-center gap-3">
+                        <div class="flex items-center gap-4 flex-nowrap">
 
-                            <!-- ROW -->
-                            <div class="w-8 text-lg font-bold text-gray-400">
+                            <!-- ROW LABEL -->
+                            <div class="w-8 text-xl font-black text-gray-300">
                                 {{ $row }}
                             </div>
 
                             <!-- SEATS -->
-                            <div class="flex gap-2">
+                            <div class="flex gap-2 md:gap-3">
 
                                 @foreach($seats as $seat)
 
@@ -77,8 +78,8 @@
                                         $isBooked = in_array($seat->id, $bookedSeatIds);
 
                                         $seatClass = $isBooked
-                                            ? 'bg-gray-300 text-transparent cursor-not-allowed'
-                                            : 'bg-white border-2 border-gray-200 hover:border-red-400 hover:shadow-md cursor-pointer text-gray-600';
+                                            ? 'bg-gray-200 text-transparent cursor-not-allowed border border-gray-200'
+                                            : 'bg-white border-2 border-gray-300 text-gray-700 hover:border-red-500 hover:text-red-600 hover:shadow-md cursor-pointer';
                                     @endphp
 
                                     <button
@@ -88,7 +89,7 @@
                                         data-number="{{ $seat->number }}"
                                         onclick="toggleSeat(this)"
                                         {{ $isBooked ? 'disabled' : '' }}
-                                        class="seat-btn w-10 h-10 md:w-12 md:h-12 rounded-xl font-bold transition-all duration-200 hover:scale-105 {{ $seatClass }}"
+                                        class="seat-btn w-8 h-8 md:w-10 md:h-10 rounded-lg text-sm md:text-base font-bold transition-all duration-200 {{ $seatClass }}"
                                     >
                                         {{ $seat->number }}
                                     </button>
@@ -123,13 +124,13 @@
                         <input type="hidden" name="seat_ids" id="seat-ids-input">
 
                         <button onclick="return prepareCheckout()"
-                            class="bg-gradient-to-r from-red-600 via-pink-600 to-red-600 bg-size-200 hover:bg-right
+                            class="bg-red-600 hover:bg-red-700
                                 text-white font-bold
                                 px-10 py-4 rounded-xl
                                 shadow-lg shadow-red-500/30
                                 hover:shadow-red-500/50
-                                transition-all duration-300
-                                hover:scale-105
+                                transform hover:-translate-y-1
+                                transition-all duration-200
                                 flex items-center gap-2">
                             <span>THANH TOÁN</span>
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
@@ -171,17 +172,14 @@ function toggleSeat(el) {
     const seatId = el.dataset.id;
     const label = el.dataset.row + el.dataset.number;
 
-    if (el.classList.contains('bg-green-500')) {
-
+    // Check if selected (class bg-red-600)
+    if (el.classList.contains('bg-red-600')) {
         unlockSeat(el, seatId, label);
-
     } else {
-
         if (selectedSeatIds.size >= maxSeats) {
             alert("Tối đa 4 ghế!");
             return;
         }
-
         lockSeat(el, seatId, label);
     }
 }
@@ -202,8 +200,9 @@ function lockSeat(el, id, label) {
 
         if (data.status === "success") {
 
+            // Apply SELECTED style
             el.className =
-                "seat-btn w-12 h-12 rounded-xl font-bold shadow-lg bg-green-500 text-white scale-110";
+                "seat-btn w-8 h-8 md:w-10 md:h-10 rounded-lg text-sm md:text-base font-bold transition-all duration-200 bg-red-600 text-white border-2 border-red-600 shadow-lg scale-110";
 
             selectedSeats.add(label);
             selectedSeatIds.add(id);
@@ -229,8 +228,9 @@ function unlockSeat(el, id, label) {
 
     .then(() => {
 
+        // Apply UNSELECTED (available) style
         el.className =
-            "seat-btn w-12 h-12 rounded-xl font-bold shadow-md bg-white border-2 border-indigo-400 text-gray-800";
+            "seat-btn w-8 h-8 md:w-10 md:h-10 rounded-lg text-sm md:text-base font-bold transition-all duration-200 bg-white border-2 border-gray-300 text-gray-700 hover:border-red-500 hover:text-red-600 hover:shadow-md cursor-pointer";
 
         selectedSeats.delete(label);
         selectedSeatIds.delete(id);
