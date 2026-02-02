@@ -4,21 +4,21 @@
 
 <!-- ===================== SLIDER ===================== -->
 
-<div class="slider-wrapper">
+<div class="khung-trangchu">
 
 @foreach($movies->take(5) as $index => $movie)
 
-<div class="slide {{ $index == 0 ? 'active' : '' }}">
+<div class="slide-phim {{ $index == 0 ? 'dang-hien' : '' }}">
 
-    <img src="{{ Storage::url($movie->poster) }}" class="slide-img">
+    <img src="{{ Storage::url($movie->poster) }}" class="anh-slide">
 
-    <div class="slide-overlay"></div>
+    <div class="lop-phu"></div>
 
-    <div class="slide-content">
+    <div class="noidung-slide">
         <h1>{{ $movie->title }}</h1>
         <p>{{ Str::limit($movie->description,120) }}</p>
 
-        <a href="{{ route('booking.movie',$movie) }}" class="btn-book">
+        <a href="{{ route('booking.movie',$movie) }}" class="nut-datve">
             Đặt vé ngay
         </a>
     </div>
@@ -27,44 +27,44 @@
 
 @endforeach
 
-<div class="slider-btn prev" onclick="prevSlide()">❮</div>
-<div class="slider-btn next" onclick="nextSlide()">❯</div>
+<div class="nut-chuyen truoc" onclick="slidePhimTruoc()">❮</div>
+<div class="nut-chuyen sau" onclick="slidePhimSau()">❯</div>
 
 </div>
 
 
-<!-- ===================== MOVIE SECTION ===================== -->
+<!-- ===================== PHẦN PHIM ===================== -->
 
-<section class="movie-section">
+<section class="phan-phim">
 
-    <div class="search-container">
+    <div class="khung-timkiem">
         <form action="{{ route('booking.index') }}" method="GET">
             <input type="text" name="search" placeholder="Bạn muốn xem phim gì hôm nay?" value="{{ request('search') }}">
             <button type="submit">TÌM KIẾM</button>
         </form>
     </div>
 
-<h2 class="section-title">MOVIE SELECTION</h2>
+<h2 class="tieude-phan">MOVIE SELECTION</h2>
 
-<div class="movie-container">
+<div class="luoi-phim">
 
 @foreach($movies as $movie)
 
-<div class="movie-card">
+<div class="the-phim">
 
 <a href="{{ route('booking.movie',$movie) }}">
 
-<div class="poster-box">
+<div class="hop-poster">
 
     <img src="{{ Storage::url($movie->poster) }}">
 
-    <div class="poster-hover">
+    <div class="lop-hover">
         <span>MUA VÉ</span>
     </div>
 
 </div>
 
-<div class="movie-info">
+<div class="thongtin-phim">
 
     <h3>{{ $movie->title }}</h3>
     <p>{{ $movie->duration }} phút</p>
@@ -79,15 +79,15 @@
 
 </div>
 
-<!-- Pagination -->
-<div class="pagination-wrapper">
+<!-- Phân trang -->
+<div class="khung-phantrang">
     {{ $movies->links() }}
 </div>
 
 </section>
 
 
-<!-- ===================== STYLE ===================== -->
+<!-- ===================== PHẦN CSS ===================== -->
 
 <style>
 
@@ -99,7 +99,7 @@
 
 
 
-.slider-wrapper {
+.khung-trangchu {
     width: 100%;
     height: 40vh;
     min-height: 350px;
@@ -107,31 +107,31 @@
     overflow: hidden;
 }
 
-.slide {
+.slide-phim {
     position: absolute;
     inset: 0;
     opacity: 0;
     transition: .8s;
 }
 
-.slide.active {
+.slide-phim.dang-hien {
     opacity: 1;
     z-index: 2;
 }
 
-.slide-img {
+.anh-slide {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.slide-overlay {
+.lop-phu {
     position: absolute;
     inset: 0;
     background: linear-gradient(to top, rgba(0,0,0,.45), transparent);
 }
 
-.slide-content {
+.noidung-slide {
     position: absolute;
     bottom: 40px;
     left: 60px;
@@ -139,17 +139,17 @@
     max-width: 500px;
 }
 
-.slide-content h1 {
+.noidung-slide h1 {
     font-size: 38px;
     font-weight: bold;
 }
 
-.slide-content p {
+.noidung-slide p {
     margin: 10px 0;
     line-height: 1.5;
 }
 
-.btn-book {
+.nut-datve {
     display: inline-block;
     background: #e50914;
     padding: 12px 28px;
@@ -159,13 +159,13 @@
     transition: .3s;
 }
 
-.btn-book:hover {
+.nut-datve:hover {
     background: #c40812;
 }
 
-/* slider buttons */
+/* Nút chuyển slide */
 
-.slider-btn {
+.nut-chuyen {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -178,37 +178,37 @@
     z-index: 10;
 }
 
-.prev { left: 20px; }
-.next { right: 20px; }
+.truoc { left: 20px; }
+.sau { right: 20px; }
 
 
 
-.movie-section {
+.phan-phim {
     padding: 60px 40px;
     background: #f5f7fa;
 }
 
-.section-title {
+.tieude-phan {
     text-align: center;
     font-size: 36px;
     font-weight: bold;
     color: #111;
 }
 
-/* SEARCH BOX */
+/* Ô tìm kiếm */
 
-.search-container {
+.khung-timkiem {
     max-width: 600px;
     margin: 0 auto 40px;
     text-align: center;
 }
 
-.search-container form {
+.khung-timkiem form {
     display: flex;
     gap: 10px;
 }
 
-.search-container input {
+.khung-timkiem input {
     flex: 1;
     padding: 12px 20px;
     border: 2px solid #ddd;
@@ -218,11 +218,11 @@
     transition: .3s;
 }
 
-.search-container input:focus {
+.khung-timkiem input:focus {
     border-color: #e50914;
 }
 
-.search-container button {
+.khung-timkiem button {
     padding: 12px 30px;
     background: #e50914;
     color: #fff;
@@ -233,22 +233,22 @@
     transition: .3s;
 }
 
-.search-container button:hover {
+.khung-timkiem button:hover {
     background: #c40812;
 }
 
-/* FLEX CONTAINER */
+/* Lưới phim */
 
-.movie-container {
+.luoi-phim {
     display: flex;
     flex-wrap: wrap;
     gap: 25px;
     justify-content: center;
 }
 
-/* CARD */
+/* Thẻ phim */
 
-.movie-card {
+.the-phim {
     width: calc(25% - 20px);
     background: #ffffff;
     border-radius: 12px;
@@ -257,26 +257,26 @@
     box-shadow: 0 10px 25px rgba(0,0,0,.08);
 }
 
-.movie-card:hover {
+.the-phim:hover {
     transform: translateY(-8px);
 }
 
-/* POSTER */
+/* Poster */
 
-.poster-box {
+.hop-poster {
     position: relative;
     height: 500px;
 }
 
-.poster-box img {
+.hop-poster img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-/* HOVER */
+/* Hover */
 
-.poster-hover {
+.lop-hover {
     position: absolute;
     inset: 0;
     background: rgba(0,0,0,.4);
@@ -287,7 +287,7 @@
     transition: .3s;
 }
 
-.poster-hover span {
+.lop-hover span {
     background: #e50914;
     color: #fff;
     padding: 10px 22px;
@@ -295,17 +295,17 @@
     font-weight: bold;
 }
 
-.poster-box:hover .poster-hover {
+.hop-poster:hover .lop-hover {
     opacity: 1;
 }
 
-/* INFO */
+/* Thông tin phim */
 
-.movie-info {
+.thongtin-phim {
     padding: 15px;
 }
 
-.movie-info h3 {
+.thongtin-phim h3 {
     font-size: 18px;
     font-weight: bold;
     color: #111;
@@ -314,29 +314,29 @@
     text-overflow: ellipsis;
 }
 
-.movie-info p {
+.thongtin-phim p {
     color: #666;
     font-size: 14px;
     margin-top: 5px;
 }
 
-/* RESPONSIVE */
+/* Responsive */
 
 @media(max-width: 1024px) {
-    .movie-card { width: calc(33.33% - 20px); }
+    .the-phim { width: calc(33.33% - 20px); }
 }
 
 @media(max-width: 768px) {
-    .movie-card { width: calc(50% - 20px); }
+    .the-phim { width: calc(50% - 20px); }
 }
 
 @media(max-width: 480px) {
-    .movie-card { width: 100%; }
+    .the-phim { width: 100%; }
 }
 
-/* PAGINATION */
+/* Phân trang */
 
-.pagination-wrapper {
+.khung-phantrang {
     margin-top: 40px;
     display: flex;
     justify-content: center;
@@ -345,31 +345,31 @@
 </style>
 
 
-<!-- ===================== SCRIPT ===================== -->
+<!-- ===================== JAVASCRIPT ===================== -->
 
 <script>
 
-let currentSlide = 0;
-let slides = document.querySelectorAll('.slide');
+let slideHienTai = 0;
+let cacSlide = document.querySelectorAll('.slide-phim');
 
-function showSlide(index) {
-    slides.forEach(slide => slide.classList.remove('active'));
-    slides[index].classList.add('active');
+function hienSlide(viTri) {
+    cacSlide.forEach(slide => slide.classList.remove('dang-hien'));
+    cacSlide[viTri].classList.add('dang-hien');
 }
 
-function nextSlide() {
-    currentSlide++;
-    if(currentSlide >= slides.length) currentSlide = 0;
-    showSlide(currentSlide);
+function slidePhimSau() {
+    slideHienTai++;
+    if(slideHienTai >= cacSlide.length) slideHienTai = 0;
+    hienSlide(slideHienTai);
 }
 
-function prevSlide() {
-    currentSlide--;
-    if(currentSlide < 0) currentSlide = slides.length - 1;
-    showSlide(currentSlide);
+function slidePhimTruoc() {
+    slideHienTai--;
+    if(slideHienTai < 0) slideHienTai = cacSlide.length - 1;
+    hienSlide(slideHienTai);
 }
 
-setInterval(nextSlide, 5000);
+setInterval(slidePhimSau, 5000);
 
 </script>
 

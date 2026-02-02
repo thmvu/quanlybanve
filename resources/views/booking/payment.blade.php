@@ -5,107 +5,107 @@
         </h2>
     </x-slot>
 
-    <div class="payment-page">
-        <div class="payment-container">
+    <div class="trang-thanhtoan">
+        <div class="khung-thanhtoan">
 
-            <div class="payment-card">
+            <div class="the-thanhtoan">
                 
-                <h3 class="page-title">Thông Tin Đặt Vé</h3>
+                <h3 class="tieude-trang">Thông Tin Đặt Vé</h3>
 
-                <div class="payment-grid">
+                <div class="luoi-thanhtoan">
                     
-                    <!-- Left Column: Movie Info -->
-                    <div class="movie-column">
+                    <!-- Cột trái: Thông tin phim -->
+                    <div class="cot-phim">
                         @if($showtime->movie->poster)
                             <img src="{{ Storage::url($showtime->movie->poster) }}" 
-                                 class="movie-poster"
+                                 class="poster-phim"
                                  alt="{{ $showtime->movie->title }}">
                         @endif
                         
-                        <div class="movie-details">
-                            <h4 class="movie-title">{{ $showtime->movie->title }}</h4>
-                            <div class="movie-duration">{{ $showtime->movie->duration }} phút</div>
+                        <div class="chitiet-phim">
+                            <h4 class="ten-phim">{{ $showtime->movie->title }}</h4>
+                            <div class="thoiluong-phim">{{ $showtime->movie->duration }} phút</div>
                             
-                            <div class="info-box">
-                                <div class="info-row">
-                                    <span class="info-label">Rạp</span>
-                                    <span class="info-value">{{ $showtime->room->cinema->name }}</span>
+                            <div class="hop-thongtin">
+                                <div class="dong-thongtin">
+                                    <span class="nhan-tt">Rạp</span>
+                                    <span class="giatri-tt">{{ $showtime->room->cinema->name }}</span>
                                 </div>
-                                <div class="info-row">
-                                    <span class="info-label">Phòng</span>
-                                    <span class="info-value">{{ $showtime->room->name }}</span>
+                                <div class="dong-thongtin">
+                                    <span class="nhan-tt">Phòng</span>
+                                    <span class="giatri-tt">{{ $showtime->room->name }}</span>
                                 </div>
-                                <div class="info-row">
-                                    <span class="info-label">Xuất chiếu</span>
-                                    <span class="info-value highlight">{{ $showtime->start_time->format('H:i') }}</span>
+                                <div class="dong-thongtin">
+                                    <span class="nhan-tt">Xuất chiếu</span>
+                                    <span class="giatri-tt noibat">{{ $showtime->start_time->format('H:i') }}</span>
                                 </div>
-                                <div class="info-row">
-                                    <span class="info-label">Ngày</span>
-                                    <span class="info-value">{{ $showtime->start_time->format('d/m/Y') }}</span>
+                                <div class="dong-thongtin">
+                                    <span class="nhan-tt">Ngày</span>
+                                    <span class="giatri-tt">{{ $showtime->start_time->format('d/m/Y') }}</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Right Column: Booking Form -->
-                    <div class="booking-column">
+                    <!-- Cột phải: Form đặt vé -->
+                    <div class="cot-datve">
                         <form method="POST" action="{{ route('booking.checkout', $showtime) }}">
                             @csrf
                             <input type="hidden" name="seat_ids" value="{{ $seatIds }}">
 
-                            <!-- Selected Seats -->
-                            <div class="section-box seats-section">
-                                <h4 class="section-label">GHẾ ĐÃ CHỌN</h4>
-                                <div class="seats-list">
+                            <!-- Ghế đã chọn -->
+                            <div class="hop-phan phan-ghe">
+                                <h4 class="nhan-phan">GHẾ ĐÃ CHỌN</h4>
+                                <div class="danhsach-ghe">
                                     @foreach($seats as $seat)
-                                        <span class="seat-tag">{{ $seat->row }}{{ $seat->number }}</span>
+                                        <span class="the-ghe">{{ $seat->row }}{{ $seat->number }}</span>
                                     @endforeach
                                 </div>
                                 
-                                <div class="total-box">
-                                    <span class="total-label">Tổng cộng</span>
+                                <div class="hop-tongcong">
+                                    <span class="nhan-tongcong">Tổng cộng</span>
                                     @php
-                                        $total = count($seats) * 100000;
+                                        $tongTien = count($seats) * 100000;
                                     @endphp
-                                    <span class="total-price">{{ number_format($total, 0, ',', '.') }} đ</span>
+                                    <span class="gia-tongcong">{{ number_format($tongTien, 0, ',', '.') }} đ</span>
                                 </div>
                             </div>
 
-                            <!-- Payment Method -->
-                            <div class="section-box">
-                                <h4 class="section-label">PHƯƠNG THỨC THANH TOÁN</h4>
+                            <!-- Phương thức thanh toán -->
+                            <div class="hop-phan">
+                                <h4 class="nhan-phan">PHƯƠNG THỨC THANH TOÁN</h4>
                                 
-                                <div class="payment-methods">
+                                <div class="cac-phuongthuc">
                                     
-                                    <label class="payment-option">
+                                    <label class="lua-chon-tt">
                                         <input type="radio" name="payment_method" value="cash" checked>
-                                        <div class="option-content">
-                                            <span class="option-icon">💵</span>
-                                            <div class="option-text">
-                                                <span class="option-name">Tiền Mặt</span>
-                                                <span class="option-desc">Thanh toán tại quầy</span>
+                                        <div class="noidung-luachon">
+                                            <span class="bieu-tuong">💵</span>
+                                            <div class="chu-luachon">
+                                                <span class="ten-luachon">Tiền Mặt</span>
+                                                <span class="mota-luachon">Thanh toán tại quầy</span>
                                             </div>
                                         </div>
                                     </label>
 
-                                    <label class="payment-option">
+                                    <label class="lua-chon-tt">
                                         <input type="radio" name="payment_method" value="vnpay">
-                                        <div class="option-content">
-                                            <span class="option-icon vnpay">VNP</span>
-                                            <div class="option-text">
-                                                <span class="option-name">VNPay</span>
-                                                <span class="option-desc">Quét mã QR</span>
+                                        <div class="noidung-luachon">
+                                            <span class="bieu-tuong vnpay">VNP</span>
+                                            <div class="chu-luachon">
+                                                <span class="ten-luachon">VNPay</span>
+                                                <span class="mota-luachon">Quét mã QR</span>
                                             </div>
                                         </div>
                                     </label>
 
-                                    <label class="payment-option">
+                                    <label class="lua-chon-tt">
                                         <input type="radio" name="payment_method" value="momo">
-                                        <div class="option-content">
-                                            <span class="option-icon momo">Mo</span>
-                                            <div class="option-text">
-                                                <span class="option-name">MoMo</span>
-                                                <span class="option-desc">Ví điện tử</span>
+                                        <div class="noidung-luachon">
+                                            <span class="bieu-tuong momo">Mo</span>
+                                            <div class="chu-luachon">
+                                                <span class="ten-luachon">MoMo</span>
+                                                <span class="mota-luachon">Ví điện tử</span>
                                             </div>
                                         </div>
                                     </label>
@@ -113,13 +113,13 @@
                                 </div>
                             </div>
 
-                            <!-- Buttons -->
-                            <div class="actions-box">
-                                <a href="{{ route('booking.show', $showtime) }}" class="btn-back">
+                            <!-- Nút bấm -->
+                            <div class="hop-nutbam">
+                                <a href="{{ route('booking.show', $showtime) }}" class="nut-quaylai">
                                     ← Quay lại
                                 </a>
                                 
-                                <button type="submit" class="btn-submit">
+                                <button type="submit" class="nut-xacnhan">
                                     XÁC NHẬN THANH TOÁN
                                 </button>
                             </div>
@@ -133,25 +133,25 @@
     </div>
 
 <style>
-.payment-page {
+.trang-thanhtoan {
     padding: 40px 20px;
     background: #f5f7fa;
     min-height: 100vh;
 }
 
-.payment-container {
+.khung-thanhtoan {
     max-width: 1200px;
     margin: 0 auto;
 }
 
-.payment-card {
+.the-thanhtoan {
     background: #fff;
     border-radius: 16px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.08);
     padding: 40px;
 }
 
-.page-title {
+.tieude-trang {
     font-size: 28px;
     font-weight: bold;
     color: #111;
@@ -160,92 +160,92 @@
     border-bottom: 2px solid #f0f0f0;
 }
 
-/* Grid Layout */
-.payment-grid {
+/* Lưới layout */
+.luoi-thanhtoan {
     display: grid;
     grid-template-columns: 1fr 2fr;
     gap: 40px;
 }
 
 @media (max-width: 968px) {
-    .payment-grid {
+    .luoi-thanhtoan {
         grid-template-columns: 1fr;
     }
 }
 
-/* Movie Column */
-.movie-column {
+/* Cột phim */
+.cot-phim {
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
-.movie-poster {
+.poster-phim {
     width: 100%;
     border-radius: 12px;
     box-shadow: 0 4px 16px rgba(0,0,0,0.1);
 }
 
-.movie-details {
+.chitiet-phim {
 }
 
-.movie-title {
+.ten-phim {
     font-size: 26px;
     font-weight: bold;
     color: #e50914;
     margin-bottom: 8px;
 }
 
-.movie-duration {
+.thoiluong-phim {
     color: #666;
     font-size: 14px;
     margin-bottom: 20px;
 }
 
-.info-box {
+.hop-thongtin {
     background: #f8f9fa;
     border-radius: 10px;
     padding: 20px;
 }
 
-.info-row {
+.dong-thongtin {
     display: flex;
     justify-content: space-between;
     padding: 10px 0;
     border-bottom: 1px solid #e5e5e5;
 }
 
-.info-row:last-child {
+.dong-thongtin:last-child {
     border-bottom: none;
 }
 
-.info-label {
+.nhan-tt {
     color: #666;
     font-size: 14px;
 }
 
-.info-value {
+.giatri-tt {
     font-weight: 600;
     color: #111;
 }
 
-.info-value.highlight {
+.giatri-tt.noibat {
     color: #e50914;
     font-weight: bold;
 }
 
-/* Booking Column */
-.booking-column {
+/* Cột đặt vé */
+.cot-datve {
 }
 
-.section-box {
+.hop-phan {
     background: #f8f9fa;
     border-radius: 12px;
     padding: 24px;
     margin-bottom: 24px;
 }
 
-.section-label {
+.nhan-phan {
     font-size: 12px;
     font-weight: bold;
     color: #666;
@@ -253,20 +253,20 @@
     margin-bottom: 16px;
 }
 
-/* Seats Section */
-.seats-section {
+/* Phần ghế */
+.phan-ghe {
     background: linear-gradient(135deg, #fff5f5 0%, #fff 100%);
     border: 2px solid #ffe5e5;
 }
 
-.seats-list {
+.danhsach-ghe {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
     margin-bottom: 20px;
 }
 
-.seat-tag {
+.the-ghe {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -280,7 +280,7 @@
     box-shadow: 0 2px 8px rgba(229, 9, 20, 0.25);
 }
 
-.total-box {
+.hop-tongcong {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -288,36 +288,36 @@
     border-top: 2px solid #ffe0e0;
 }
 
-.total-label {
+.nhan-tongcong {
     font-size: 16px;
     color: #666;
 }
 
-.total-price {
+.gia-tongcong {
     font-size: 32px;
     font-weight: bold;
     color: #e50914;
 }
 
-/* Payment Methods */
-.payment-methods {
+/* Phương thức thanh toán */
+.cac-phuongthuc {
     display: flex;
     flex-direction: column;
     gap: 12px;
 }
 
-.payment-option {
+.lua-chon-tt {
     display: block;
     position: relative;
     cursor: pointer;
 }
 
-.payment-option input[type="radio"] {
+.lua-chon-tt input[type="radio"] {
     position: absolute;
     opacity: 0;
 }
 
-.option-content {
+.noidung-luachon {
     display: flex;
     align-items: center;
     gap: 16px;
@@ -328,18 +328,18 @@
     transition: all 0.2s;
 }
 
-.payment-option:hover .option-content {
+.lua-chon-tt:hover .noidung-luachon {
     border-color: #e50914;
     background: #fff5f5;
 }
 
-.payment-option input:checked + .option-content {
+.lua-chon-tt input:checked + .noidung-luachon {
     border-color: #e50914;
     background: #fff5f5;
     box-shadow: 0 2px 8px rgba(229, 9, 20, 0.15);
 }
 
-.option-icon {
+.bieu-tuong {
     width: 50px;
     height: 50px;
     display: flex;
@@ -350,46 +350,46 @@
     border-radius: 8px;
 }
 
-.option-icon.vnpay {
+.bieu-tuong.vnpay {
     background: #e3f2fd;
     color: #1976d2;
     font-weight: bold;
     font-size: 16px;
 }
 
-.option-icon.momo {
+.bieu-tuong.momo {
     background: #fce4ec;
     color: #c2185b;
     font-weight: bold;
     font-size: 16px;
 }
 
-.option-text {
+.chu-luachon {
     flex: 1;
     display: flex;
     flex-direction: column;
     gap: 4px;
 }
 
-.option-name {
+.ten-luachon {
     font-weight: bold;
     color: #111;
     font-size: 15px;
 }
 
-.option-desc {
+.mota-luachon {
     font-size: 13px;
     color: #666;
 }
 
-/* Actions */
-.actions-box {
+/* Nút bấm */
+.hop-nutbam {
     display: flex;
     gap: 16px;
     padding-top: 8px;
 }
 
-.btn-back {
+.nut-quaylai {
     padding: 16px 24px;
     border-radius: 8px;
     font-weight: 600;
@@ -399,12 +399,12 @@
     text-decoration: none;
 }
 
-.btn-back:hover {
+.nut-quaylai:hover {
     background: #e0e0e0;
     color: #111;
 }
 
-.btn-submit {
+.nut-xacnhan {
     flex: 1;
     background: #e50914;
     color: #fff;
@@ -418,22 +418,22 @@
     box-shadow: 0 4px 12px rgba(229, 9, 20, 0.3);
 }
 
-.btn-submit:hover {
+.nut-xacnhan:hover {
     background: #c40812;
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(229, 9, 20, 0.4);
 }
 
 @media (max-width: 768px) {
-    .payment-card {
+    .the-thanhtoan {
         padding: 24px;
     }
     
-    .actions-box {
+    .hop-nutbam {
         flex-direction: column;
     }
     
-    .btn-back {
+    .nut-quaylai {
         text-align: center;
     }
 }

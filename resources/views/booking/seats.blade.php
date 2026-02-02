@@ -5,63 +5,63 @@
         </h2>
     </x-slot>
 
-    <div class="seats-page">
-        <div class="seats-container">
+    <div class="trang-chonghe">
+        <div class="khung-chonghe">
 
             @if(session('error'))
-                <div class="alert-error">
+                <div class="thongbao-loi">
                     {{ session('error') }}
                 </div>
             @endif
 
-            <div class="seats-card">
+            <div class="the-chonghe">
 
-                <!-- Movie Info Header -->
-                <div class="movie-header">
+                <!-- Thông tin phim -->
+                <div class="dauphim-header">
                     <h2>{{ $showtime->movie->title }}</h2>
-                    <p class="movie-meta">
+                    <p class="thongtin-phim">
                         {{ $showtime->room->cinema->name }} • {{ $showtime->room->name }} • 
                         {{ $showtime->start_time->format('H:i, d/m/Y') }}
                     </p>
                 </div>
 
-                <!-- SCREEN -->
-                <div class="screen-section">
-                    <div class="screen-bar"></div>
-                    <p class="screen-label">MÀN HÌNH</p>
+                <!-- Màn hình -->
+                <div class="phan-manhinh">
+                    <div class="thanh-manhinh"></div>
+                    <p class="nhan-manhinh">MÀN HÌNH</p>
                 </div>
 
-                <!-- LEGEND -->
-                <div class="legend-box">
-                    <div class="legend-item">
-                        <div class="seat-demo available"></div>
+                <!-- Chú thích -->
+                <div class="hop-chuathich">
+                    <div class="muc-chuathich">
+                        <div class="ghe-mau controng"></div>
                         <span>Trống</span>
                     </div>
-                    <div class="legend-item">
-                        <div class="seat-demo selected"></div>
+                    <div class="muc-chuathich">
+                        <div class="ghe-mau dangchon"></div>
                         <span>Đang chọn</span>
                     </div>
-                    <div class="legend-item">
-                        <div class="seat-demo booked"></div>
+                    <div class="muc-chuathich">
+                        <div class="ghe-mau dadat"></div>
                         <span>Đã đặt</span>
                     </div>
                 </div>
 
-                <!-- SEATS GRID -->
-                <div class="seats-grid">
+                <!-- Lưới ghế -->
+                <div class="luoi-ghe">
                     @php
                         $rows = $showtime->room->seats->groupBy('row');
                     @endphp
 
                     @foreach($rows as $row => $seats)
-                        <div class="seat-row">
-                            <div class="row-label">{{ $row }}</div>
+                        <div class="hang-ghe">
+                            <div class="nhan-hang">{{ $row }}</div>
 
-                            <div class="seat-list">
+                            <div class="danh-sach-ghe">
                                 @foreach($seats as $seat)
                                     @php
                                         $isBooked = in_array($seat->id, $bookedSeatIds);
-                                        $seatClass = $isBooked ? 'seat-btn booked' : 'seat-btn';
+                                        $seatClass = $isBooked ? 'nut-ghe dadat' : 'nut-ghe';
                                     @endphp
 
                                     <button
@@ -80,20 +80,20 @@
                     @endforeach
                 </div>
 
-                <!-- SUMMARY & CHECKOUT -->
-                <div class="checkout-section">
-                    <div class="summary-box">
-                        <p class="summary-label">Ghế đã chọn:</p>
-                        <p id="selected-seats-display" class="summary-seats">Chưa chọn ghế</p>
-                        <p class="summary-price">
-                            Tổng tiền: <span id="total-price">0</span> VND
+                <!-- Tổng kết & thanh toán -->
+                <div class="phan-thanhtoan">
+                    <div class="hop-tongket">
+                        <p class="nhan-tongket">Ghế đã chọn:</p>
+                        <p id="hienthi-ghe" class="ghe-dachon">Chưa chọn ghế</p>
+                        <p class="gia-tong">
+                            Tổng tiền: <span id="tong-gia">0</span> VND
                         </p>
                     </div>
 
                     <form action="{{ route('booking.payment', $showtime) }}" method="POST">
                         @csrf
-                        <input type="hidden" name="seat_ids" id="seat-ids-input">
-                        <button onclick="return prepareCheckout()" class="btn-checkout">
+                        <input type="hidden" name="seat_ids" id="input-id-ghe">
+                        <button onclick="return chuanBiThanhToan()" class="nut-thanhtoan">
                             THANH TOÁN →
                         </button>
                     </form>
@@ -104,25 +104,25 @@
     </div>
 
 <style>
-.seats-page {
+.trang-chonghe {
     padding: 40px 20px;
     background: #f5f7fa;
     min-height: 100vh;
 }
 
-.seats-container {
+.khung-chonghe {
     max-width: 1000px;
     margin: 0 auto;
 }
 
-.seats-card {
+.the-chonghe {
     background: #fff;
     border-radius: 16px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.08);
     padding: 40px;
 }
 
-.alert-error {
+.thongbao-loi {
     background: #fee;
     border: 1px solid #fcc;
     color: #c00;
@@ -131,33 +131,33 @@
     margin-bottom: 20px;
 }
 
-/* Movie Header */
-.movie-header {
+/* Đầu phim */
+.dauphim-header {
     text-align: center;
     margin-bottom: 40px;
     padding-bottom: 20px;
     border-bottom: 2px solid #f0f0f0;
 }
 
-.movie-header h2 {
+.dauphim-header h2 {
     font-size: 32px;
     font-weight: bold;
     color: #e50914;
     margin-bottom: 8px;
 }
 
-.movie-meta {
+.thongtin-phim {
     color: #666;
     font-size: 15px;
 }
 
-/* Screen */
-.screen-section {
+/* Màn hình */
+.phan-manhinh {
     margin-bottom: 40px;
     text-align: center;
 }
 
-.screen-bar {
+.thanh-manhinh {
     width: 70%;
     height: 12px;
     background: linear-gradient(to bottom, #e50914, #ff6b6b);
@@ -166,15 +166,15 @@
     box-shadow: 0 8px 20px rgba(229, 9, 20, 0.3);
 }
 
-.screen-label {
+.nhan-manhinh {
     font-size: 12px;
     font-weight: bold;
     color: #999;
     letter-spacing: 3px;
 }
 
-/* Legend */
-.legend-box {
+/* Chú thích */
+.hop-chuathich {
     display: flex;
     justify-content: center;
     gap: 30px;
@@ -182,41 +182,41 @@
     flex-wrap: wrap;
 }
 
-.legend-item {
+.muc-chuathich {
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
-.legend-item span {
+.muc-chuathich span {
     font-size: 14px;
     font-weight: 600;
     color: #555;
 }
 
-.seat-demo {
+.ghe-mau {
     width: 32px;
     height: 32px;
     border-radius: 6px;
 }
 
-.seat-demo.available {
+.ghe-mau.controng {
     background: #fff;
     border: 2px solid #ddd;
 }
 
-.seat-demo.selected {
+.ghe-mau.dangchon {
     background: #e50914;
     border: 2px solid #c40812;
 }
 
-.seat-demo.booked {
+.ghe-mau.dadat {
     background: #ccc;
     border: 2px solid #aaa;
 }
 
-/* Seats Grid */
-.seats-grid {
+/* Lưới ghế */
+.luoi-ghe {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -226,13 +226,13 @@
     padding-bottom: 10px;
 }
 
-.seat-row {
+.hang-ghe {
     display: flex;
     align-items: center;
     gap: 16px;
 }
 
-.row-label {
+.nhan-hang {
     width: 30px;
     text-align: center;
     font-size: 18px;
@@ -240,12 +240,12 @@
     color: #aaa;
 }
 
-.seat-list {
+.danh-sach-ghe {
     display: flex;
     gap: 8px;
 }
 
-.seat-btn {
+.nut-ghe {
     width: 40px;
     height: 40px;
     border-radius: 8px;
@@ -258,28 +258,28 @@
     color: #333;
 }
 
-.seat-btn:hover:not(.booked):not(.selected) {
+.nut-ghe:hover:not(.dadat):not(.dangchon) {
     border-color: #e50914;
     background: #fff5f5;
     transform: scale(1.1);
 }
 
-.seat-btn.selected {
+.nut-ghe.dangchon {
     background: #e50914;
     border-color: #c40812;
     color: #fff;
     transform: scale(1.1);
 }
 
-.seat-btn.booked {
+.nut-ghe.dadat {
     background: #e0e0e0;
     border-color: #bbb;
     color: transparent;
     cursor: not-allowed;
 }
 
-/* Checkout Section */
-.checkout-section {
+/* Thanh toán */
+.phan-thanhtoan {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -289,34 +289,34 @@
     flex-wrap: wrap;
 }
 
-.summary-box {
+.hop-tongket {
     flex: 1;
 }
 
-.summary-label {
+.nhan-tongket {
     font-size: 14px;
     color: #666;
     margin-bottom: 6px;
 }
 
-.summary-seats {
+.ghe-dachon {
     font-size: 24px;
     font-weight: bold;
     color: #e50914;
     margin-bottom: 10px;
 }
 
-.summary-price {
+.gia-tong {
     font-size: 16px;
     color: #333;
 }
 
-.summary-price span {
+.gia-tong span {
     font-weight: bold;
     color: #000;
 }
 
-.btn-checkout {
+.nut-thanhtoan {
     background: #e50914;
     color: #fff;
     padding: 16px 48px;
@@ -329,23 +329,23 @@
     box-shadow: 0 4px 12px rgba(229, 9, 20, 0.3);
 }
 
-.btn-checkout:hover {
+.nut-thanhtoan:hover {
     background: #c40812;
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(229, 9, 20, 0.4);
 }
 
 @media (max-width: 768px) {
-    .seats-card {
+    .the-chonghe {
         padding: 20px;
     }
     
-    .checkout-section {
+    .phan-thanhtoan {
         flex-direction: column;
         align-items: stretch;
     }
     
-    .btn-checkout {
+    .nut-thanhtoan {
         width: 100%;
     }
 }
@@ -353,37 +353,37 @@
 
 <script>
 const showtimeId = {{ $showtime->id }};
-const selectedSeats = new Set();
-const selectedSeatIds = new Set();
+const gheChon = new Set();
+const idGheChon = new Set();
 const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-const pricePerSeat = 100000;
-const maxSeats = 4;
+const giaMotGhe = 100000;
+const soGheToiDa = 4;
 
-function prepareCheckout() {
-    if (selectedSeatIds.size === 0) {
+function chuanBiThanhToan() {
+    if (idGheChon.size === 0) {
         alert("Bạn chưa chọn ghế!");
         return false;
     }
-    document.getElementById('seat-ids-input').value = Array.from(selectedSeatIds).join(',');
+    document.getElementById('input-id-ghe').value = Array.from(idGheChon).join(',');
     return true;
 }
 
 function toggleSeat(el) {
-    const seatId = el.dataset.id;
-    const label = el.dataset.row + el.dataset.number;
+    const idGhe = el.dataset.id;
+    const nhan = el.dataset.row + el.dataset.number;
 
-    if (el.classList.contains('selected')) {
-        unlockSeat(el, seatId, label);
+    if (el.classList.contains('dangchon')) {
+        moKhoaGhe(el, idGhe, nhan);
     } else {
-        if (selectedSeatIds.size >= maxSeats) {
+        if (idGheChon.size >= soGheToiDa) {
             alert("Tối đa 4 ghế!");
             return;
         }
-        lockSeat(el, seatId, label);
+        khoaGhe(el, idGhe, nhan);
     }
 }
 
-function lockSeat(el, id, label) {
+function khoaGhe(el, id, nhan) {
     fetch(`/booking/${showtimeId}/lock`, {
         method: "POST",
         headers: {
@@ -395,17 +395,17 @@ function lockSeat(el, id, label) {
     .then(res => res.json())
     .then(data => {
         if (data.status === "success") {
-            el.classList.add('selected');
-            selectedSeats.add(label);
-            selectedSeatIds.add(id);
-            updateDisplay();
+            el.classList.add('dangchon');
+            gheChon.add(nhan);
+            idGheChon.add(id);
+            capNhatHienThi();
         } else {
             alert("Ghế đã có người chọn!");
         }
     });
 }
 
-function unlockSeat(el, id, label) {
+function moKhoaGhe(el, id, nhan) {
     fetch(`/booking/${showtimeId}/unlock`, {
         method: "POST",
         headers: {
@@ -415,23 +415,23 @@ function unlockSeat(el, id, label) {
         body: JSON.stringify({ seat_id: id })
     })
     .then(() => {
-        el.classList.remove('selected');
-        selectedSeats.delete(label);
-        selectedSeatIds.delete(id);
-        updateDisplay();
+        el.classList.remove('dangchon');
+        gheChon.delete(nhan);
+        idGheChon.delete(id);
+        capNhatHienThi();
     });
 }
 
-function updateDisplay() {
-    const seatBox = document.getElementById("selected-seats-display");
-    const priceBox = document.getElementById("total-price");
+function capNhatHienThi() {
+    const hopGhe = document.getElementById("hienthi-ghe");
+    const hopGia = document.getElementById("tong-gia");
 
-    if (selectedSeats.size > 0) {
-        seatBox.innerText = [...selectedSeats].join(", ");
-        priceBox.innerText = (selectedSeats.size * pricePerSeat).toLocaleString("vi-VN");
+    if (gheChon.size > 0) {
+        hopGhe.innerText = [...gheChon].join(", ");
+        hopGia.innerText = (gheChon.size * giaMotGhe).toLocaleString("vi-VN");
     } else {
-        seatBox.innerText = "Chưa chọn ghế";
-        priceBox.innerText = "0";
+        hopGhe.innerText = "Chưa chọn ghế";
+        hopGia.innerText = "0";
     }
 }
 </script>
