@@ -71,6 +71,8 @@
                                 @endforeach
                             </tbody>
                         </table>
+                    <div class="mt-4">
+                        {{ $showtimes->links() }}
                     </div>
                 </div>
             </div>

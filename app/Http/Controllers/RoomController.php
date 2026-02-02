@@ -15,7 +15,7 @@ class RoomController extends Controller
         if($request->has('cinema_id')) {
             $query->where('cinema_id', $request->cinema_id);
         }
-        $rooms = $query->latest()->get();
+        $rooms = $query->latest()->paginate(10);
         return view('admin.rooms.index', compact('rooms'));
     }
 
