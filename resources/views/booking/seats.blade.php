@@ -25,29 +25,29 @@
                 <!-- SCREEN -->
                 <div class="mb-12 text-center">
                     <div class="relative mx-auto max-w-xl">
-                        <div class="h-3 bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 rounded-full shadow-lg"></div>
-                        <p class="mt-2 tracking-widest font-bold text-gray-500 dark:text-gray-400">
+                        <div class="h-3 bg-gradient-to-r from-red-400 via-pink-500 to-red-400 rounded-full shadow-[0_0_15px_rgba(236,72,153,0.5)]"></div>
+                        <p class="mt-4 tracking-[0.2em] font-bold text-gray-400 dark:text-gray-500 text-sm">
                             MÀN HÌNH
                         </p>
                     </div>
                 </div>
 
                 <!-- LEGEND -->
-                <div class="flex justify-center gap-8 flex-wrap mb-10 bg-gray-100 dark:bg-gray-800 p-4 rounded-xl">
+                <div class="flex justify-center gap-8 flex-wrap mb-10 bg-gray-50 dark:bg-gray-800 p-4 rounded-xl border border-gray-100">
 
                     <div class="flex items-center gap-2">
-                        <div class="w-10 h-10 bg-white border-2 border-indigo-400 rounded-lg"></div>
-                        <span>Còn trống</span>
+                        <div class="w-8 h-8 bg-white border-2 border-gray-300 rounded-lg"></div>
+                        <span class="text-sm font-medium text-gray-600">Còn trống</span>
                     </div>
 
                     <div class="flex items-center gap-2">
-                        <div class="w-10 h-10 bg-green-500 rounded-lg shadow"></div>
-                        <span>Đang chọn</span>
+                        <div class="w-8 h-8 bg-green-500 rounded-lg shadow-md shadow-green-200"></div>
+                        <span class="text-sm font-medium text-gray-600">Đang chọn</span>
                     </div>
 
                     <div class="flex items-center gap-2">
-                        <div class="w-10 h-10 bg-gray-500 rounded-lg"></div>
-                        <span>Đã đặt</span>
+                        <div class="w-8 h-8 bg-gray-400 rounded-lg"></div>
+                        <span class="text-sm font-medium text-gray-600">Đã đặt</span>
                     </div>
 
                 </div>
@@ -64,7 +64,7 @@
                         <div class="flex items-center gap-3">
 
                             <!-- ROW -->
-                            <div class="w-8 text-lg font-bold text-indigo-500">
+                            <div class="w-8 text-lg font-bold text-gray-400">
                                 {{ $row }}
                             </div>
 
@@ -77,8 +77,8 @@
                                         $isBooked = in_array($seat->id, $bookedSeatIds);
 
                                         $seatClass = $isBooked
-                                            ? 'bg-gray-500 text-white cursor-not-allowed'
-                                            : 'bg-white border-2 border-indigo-400 hover:bg-indigo-100 hover:border-indigo-600 cursor-pointer text-gray-800';
+                                            ? 'bg-gray-300 text-transparent cursor-not-allowed'
+                                            : 'bg-white border-2 border-gray-200 hover:border-red-400 hover:shadow-md cursor-pointer text-gray-600';
                                     @endphp
 
                                     <button
@@ -88,7 +88,7 @@
                                         data-number="{{ $seat->number }}"
                                         onclick="toggleSeat(this)"
                                         {{ $isBooked ? 'disabled' : '' }}
-                                        class="seat-btn w-12 h-12 rounded-xl font-bold shadow-md transition-all duration-200 hover:scale-110 {{ $seatClass }}"
+                                        class="seat-btn w-10 h-10 md:w-12 md:h-12 rounded-xl font-bold transition-all duration-200 hover:scale-105 {{ $seatClass }}"
                                     >
                                         {{ $seat->number }}
                                     </button>
@@ -103,17 +103,17 @@
                 </div>
 
                 <!-- SUMMARY -->
-                <div class="border-t pt-6 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="border-t border-gray-100 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
 
                     <div>
-                        <p class="text-gray-500">Ghế đã chọn:</p>
-                        <p id="selected-seats-display" class="text-2xl font-bold text-indigo-600">
+                        <p class="text-gray-500 font-medium mb-1">Ghế đã chọn:</p>
+                        <p id="selected-seats-display" class="text-2xl font-bold text-red-600 min-h-[2rem]">
                             Chưa chọn ghế
                         </p>
 
-                        <p class="mt-1">
+                        <p class="mt-2 text-lg">
                             Tổng tiền:
-                            <span id="total-price" class="font-bold text-red-600">0</span> VND
+                            <span id="total-price" class="font-bold text-gray-900">0</span> <span class="text-sm text-gray-500">VND</span>
                         </p>
                     </div>
 
@@ -123,14 +123,16 @@
                         <input type="hidden" name="seat_ids" id="seat-ids-input">
 
                         <button onclick="return prepareCheckout()"
-                            class="bg-red-600 hover:bg-red-700
+                            class="bg-gradient-to-r from-red-600 via-pink-600 to-red-600 bg-size-200 hover:bg-right
                                 text-white font-bold
-                                px-12 py-4 rounded-xl
-                                shadow-[0_0_20px_rgba(239,68,68,0.6)]
-                                hover:shadow-[0_0_35px_rgba(239,68,68,0.9)]
-                                transition-all duration-200
-                                hover:scale-105">
-                            THANH TOÁN →
+                                px-10 py-4 rounded-xl
+                                shadow-lg shadow-red-500/30
+                                hover:shadow-red-500/50
+                                transition-all duration-300
+                                hover:scale-105
+                                flex items-center gap-2">
+                            <span>THANH TOÁN</span>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                         </button>
 
 
