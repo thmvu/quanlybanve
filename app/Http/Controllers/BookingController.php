@@ -48,10 +48,6 @@ class BookingController extends Controller
         // Get booked seats
         $bookedSeatIds = $showtime->tickets->pluck('seat_id')->toArray();
         
-        // Get locked seats from Cache
-        // Pattern: seat_lock_{showtime_id}_{seat_id}
-        // Ideally we should have a list, but iterating all seats is easier for small rooms
-        
         return view('booking.seats', compact('showtime', 'bookedSeatIds'));
     }
 
@@ -62,7 +58,7 @@ class BookingController extends Controller
         ]);
 
         $seatId = $request->seat_id;
-        $userId = auth()->id() ?? 'guest_' . session()->getId(); // Allow guests if needed, or force auth
+        $userId = auth()->id() ?? 'guest_' . session()->getId(); 
         $lockKey = "seat_lock_{$showtime->id}_{$seatId}";
 
         // Check if seat is already booked
@@ -126,9 +122,7 @@ class BookingController extends Controller
     {
         $userId = auth()->id() ?? 0; // Guest?
         
-        // In real app, we get selected seats from request
-        // For security, we must verify that these seats are LOCKED by THIS user
-        // simplified: accepting a list of "seat_ids"
+
         $seatIds = explode(',', $request->seat_ids);
         
         if(empty($seatIds)) {
@@ -137,8 +131,7 @@ class BookingController extends Controller
 
         DB::beginTransaction();
         try {
-            // Create Order
-            // Calculate price (placeholder 100k per seat)
+            
             $pricePerSeat = 100000;
             $total = count($seatIds) * $pricePerSeat;
 
@@ -153,7 +146,6 @@ class BookingController extends Controller
             foreach ($seatIds as $sid) {
                 // Verify lock
                 $lockKey = "seat_lock_{$showtime->id}_{$sid}";
-                // if (!Cache::has($lockKey) || Cache::get($lockKey) != $userId) { ... }
 
                 Ticket::create([
                     'order_id' => $order->id,
