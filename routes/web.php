@@ -31,6 +31,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('tickets', [\App\Http\Controllers\Admin\TicketController::class, 'index'])->name('tickets.index');
     Route::get('tickets/{ticket}', [\App\Http\Controllers\Admin\TicketController::class, 'show'])->name('tickets.show');
     Route::post('tickets/{ticket}/check-in', [\App\Http\Controllers\Admin\TicketController::class, 'checkIn'])->name('tickets.checkIn');
+    
+    // Users Management
+    Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
 });
 
 Route::middleware('auth')->group(function () {
