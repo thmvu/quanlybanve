@@ -4,8 +4,9 @@ Chào mừng đến với dự án Website Quản Lý Bán Vé Xem Phim. Đây l
 
 ## 👥 Thành Viên Nhóm 2
 
-*   **Từ Hữu Minh Vũ**
-*   **Phạm Thị Minh Ngọc**
+*   **Từ Hữu Minh Vũ (23010067)** 
+*   **Phạm Thị Minh (23010167)Ngọc**
+*   **Trần Minh Tuấn**
 
 ---
 
