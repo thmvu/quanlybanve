@@ -59,6 +59,9 @@
                                     <x-dropdown-link :href="route('admin.showtimes.index')">
                                         {{ __('Showtimes') }}
                                     </x-dropdown-link>
+                                    <x-dropdown-link :href="route('admin.users.index')">
+                                        {{ __('Users') }}
+                                    </x-dropdown-link>
                                 </x-slot>
                             </x-dropdown>
                         </div>
