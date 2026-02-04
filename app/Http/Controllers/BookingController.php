@@ -31,7 +31,7 @@ class BookingController extends Controller
         }
 
         $query = Movie::where('status', $status);
-        $movies = $this->movieService->getAllMovies('now_showing', $request->get('search'), 4);
+        $movies = $this->movieService->getAllMovies($status, $request->get('search'), 4);
         return view('booking.index', compact('movies'));
     }
 
