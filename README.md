@@ -94,6 +94,7 @@ Hệ thống được xây dựng trên nền tảng **Laravel**, tập trung v�
 *   **Trang Chủ**: Banner slider lớn, danh sách phim dạng lưới.
 *   **Chọn Ghế**: Sơ đồ ghế ngồi trực quan với chú thích màu sắc (Trắng: Trống, Đỏ: Đang chọn, Xám: Đã đặt).
 *   **Thanh Toán**: Giao diện 2 cột hiện đại, chọn phương thức thanh toán dễ dàng.
+*   **Lịch Chiếu**: Hiển thị lịch theo ngày/giờ, lọc nhanh theo rạp và thể loại phim.
 ---
-
+LỜI CẢM ƠN: Xin chân thành cảm ơn thầy/cô và các bạn đã dành thời gian theo dõi và đóng góp ý kiến cho sản phẩm.
 © 2026 Nhóm 2 - Quản Lý Bán Vé Xem Phim. All rights reserved.
